@@ -1,0 +1,28 @@
+@Library('jenkinslib') _  
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+
+pipeline {
+    agent {
+        label 'master'
+    }
+    stages{
+        stage("检出代码"){
+            steps{
+                script {
+                    tools.GitCheckOut("$params.tag", "$params.url")
+                }
+            }
+        }
+        stage("代码扫描"){
+            steps{
+                script {
+                mimo.Sonarqube("$params.Vsersion","$params.url")
+                }
+            }
+           
+        }
+    }
+    
+}

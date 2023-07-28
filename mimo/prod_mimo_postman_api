@@ -1,0 +1,70 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+pipeline {
+    agent {
+        label 'master'
+    }
+
+    environment {
+        collectionid = "${params.COLLECTIONID}"
+        apikey = "${params.APIKEY}"
+        env_settings = "${params.env_settings}"
+        debug = "${params.debug}"
+    }
+
+    stages {
+        stage("拉取环境配置文件") {
+            steps {
+                script {
+                    tools.GitCheckOut("${params.tag}", "${params.url}")
+                }
+            }
+        }
+        stage("执行postman接口") {
+            steps {
+                script {
+                    sh """rm -rf ./newman/*"""
+                    sh """newman run https://api.getpostman.com/collections/${collectionid}?apikey=${apikey} --environment ${env_settings} --export-environment output_postman_api_env.json  -r htmlextra --reporter-htmlextra-title MIMO项目接口自动化报告 || true"""
+                    result = sh(script: "ls ./newman", returnStdout: true).trim()
+                    ReportName="""prod_run_${BUILD_NUMBER}.html"""
+                    sh """mv ./newman/${result} ../postman_report/${ReportName}"""
+                }
+            }
+        }
+        stage("发送测试报告"){
+            steps {
+                script {
+                    if ("${debug}" == "False"){
+                        sh """
+                            python3 script.py  ../postman_report/${ReportName} ${debug}
+                        """
+                    }else{
+                        sh """
+                            python3 script.py  ../postman_report/${ReportName} ${debug}
+                        """
+                    }
+                }
+            }
+        }
+
+        
+    }
+    post{
+        always{
+            script{
+                if (currentBuild.result != "SUCCESS"){
+                    if ("${debug}" == "False"){
+
+                        sh """python3 script.py ${currentBuild.result} ${debug}"""
+                    }else{
+                        sh """python3 script.py ${currentBuild.result} ${debug} """
+                    }
+                }
+            }
+        }
+        
+    }
+}

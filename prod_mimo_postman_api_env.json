@@ -1,0 +1,105 @@
+{
+	"id": "0bb70b3b-1a2f-4efc-adb6-b46083a28fa2",
+	"name": "正式环境",
+	"values": [
+		{
+			"key": "host",
+			"value": "https://web3.mimo.immo",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "api",
+			"value": "a_1681997958",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "openudid",
+			"value": "autoprod",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "openudid1",
+			"value": "autoprod2",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "openudid2",
+			"value": "search",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "user_type",
+			"value": "70",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "lan",
+			"value": "zh_TW",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "pwd",
+			"value": "Sta@1234",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "init_tb_mid",
+			"value": "YqyVZW5m",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "init_tb_zid",
+			"value": "Yqycamo=",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "init_tb_cid",
+			"value": "Yqyca2s=",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "im_id",
+			"value": "2023071141549001336111718",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "club_im_id",
+			"value": "2023062769194004833349170",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "version",
+			"value": "1.2.0",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "version_code",
+			"value": "28",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "uuid",
+			"value": "ADFER4RERWTEYRTRWERWREQEQWE",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-07-24T08:47:48.341Z",
+	"_postman_exported_using": "Postman/10.16.2"
+}
