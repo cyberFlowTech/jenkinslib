@@ -89,8 +89,8 @@ def Approval(envi){
         approval = "YES"
         // 测试和生产环境发版审批人
         if ( envi == "test" ){
-            adminUser = "zhangkai"
-            approvalDD = "carterzhk"
+            adminUser = "xiangbo"
+            approvalDD = "txiangbo"
         }else{
             adminUser = "longhaijian"
             approvalDD = "Tyler"
@@ -111,9 +111,9 @@ def Approval(envi){
         // 推送消息到telegram
         input_message = "$Applier_name 申请发布项目 ${env.JOB_NAME} 到 ${envi} 环境"
         if (envi == "test"){
-            telegramAPI = "http://172.16.13.30:5001/telegramGroupNotify/jenkins/approvalTest"
+            telegramAPI = "http://172.31.36.156:5001/telegramGroupNotify/jenkins/approvalTest"
         }else{
-            telegramAPI = "http://172.16.13.30:5001/telegramGroupNotify/jenkins/approvalProd"
+            telegramAPI = "http://172.31.36.156:5001/telegramGroupNotify/jenkins/approvalProd"
         }
         ReqApprovalByTelegramWebhook(adminUser,approvalDD,envi,telegramAPI)
 
@@ -181,7 +181,7 @@ def Notify(envi,result) {
     approvalDD = "sample"
 
     // 推送消息到telegram
-    telegramAPI = "http://172.16.13.30:5001/telegramGroupNotify/jenkins/publishNotify"
+    telegramAPI = "http://172.31.36.156:5001/telegramGroupNotify/jenkins/publishNotify"
     ReqPublishNotifyByTelegramWebhook(adminUser,approvalDD,envi,telegramAPI,result)
 
 
