@@ -33,7 +33,7 @@ pipeline {
 
         string(
             name: 'Tag', 
-            defaultValue: 'd2.0.9', 
+            defaultValue: '2.0.40', 
             description: '默认分支或者Tag'
         )
         
