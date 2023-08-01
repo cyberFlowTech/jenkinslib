@@ -13,11 +13,11 @@ def BuildImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "dev"){
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/test/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/test/
             """
         }else{
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/${env}/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/${env}/
             """
         }
 
@@ -55,11 +55,11 @@ def BuildTaskImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "dev"){
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/test/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/test/
             """
         }else{
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/${env}/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/${env}/
             """
         } 
         
@@ -173,11 +173,11 @@ def BuildMimoImage(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "dev"){
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/test/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/test/
             """
         }else{
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/${env}/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/${env}/
             """
         }
 
@@ -211,11 +211,11 @@ def BuildTaskImage(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "dev"){
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/test/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/test/
             """
         }else{
             sh """
-            cp /home/linxin/jenkins/jenkins_mount/dbConfig/mimo/${env}/* ./config/${env}/
+            cp /home/jenkins/dbConfig/mimo/${env}/* ./config/${env}/
             """
         } 
         

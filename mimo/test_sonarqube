@@ -5,7 +5,7 @@ def mimo = new org.devops.mimo()
 
 pipeline {
     agent {
-        label 'master'
+        label 'slave1'
     }
     stages{
         stage("检出代码"){

@@ -27,7 +27,7 @@ pipeline {
 
         string(
             name: "RepoUrl",
-            defaultValue: '$GITLAB/server/php/mimo-model-admin.git',
+            defaultValue: '$GITLAB/mimo-api-admin.git',
             description: '代码仓库地址'
         )
 

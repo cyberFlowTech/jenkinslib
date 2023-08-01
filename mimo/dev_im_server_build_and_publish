@@ -12,7 +12,7 @@ def skipadminUser = false
 pipeline {
 
     agent {
-        label 'master'
+        label 'slave1'
     }
 
     options {
@@ -27,7 +27,7 @@ pipeline {
 
         string(
             name: "RepoUrl",
-            defaultValue: '$GITLAB/infras/imservice.git',
+            defaultValue: '$GITLAB/mimo-im.git',
             description: '代码仓库地址'
         )
 
