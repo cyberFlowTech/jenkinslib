@@ -174,8 +174,8 @@ pipeline {
             wrap([$class: 'BuildUser']) {
                 script{
                     // 邮件
-                    emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
-                    emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
                     //telegram通知
                     result = "${currentBuild.currentResult}"
                     tools.Notify(envi,result)
