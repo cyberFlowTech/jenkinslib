@@ -7,25 +7,39 @@ def PrintMsg(msg){
 // https://api.telegram.org/bot6230860729:AAE9Uj6JJYOap40Ie35UR-STW7ZKEYslNoI/sendMessage
 // -919670551
 
+// def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
+//     sh """
+//         #!/bin/sh -e\n curl -k --location --request POST '${api}' \
+//         --header 'Content-Type: application/json' \
+//         --data '{
+//         "env": "${envi}",
+//         "admin": "${admin}",
+//         "telegramId": "${telegramId}",
+//         "builder": "${env.BUILD_USER}",
+//         "jobName": "${env.JOB_NAME}",
+//         "tag": "${env.tag}",
+//         "token": "${env.randomToken}",
+//         "approvalUrl": "${env.BUILD_URL}input/",
+//         "diff": "${env.BUILD_URL}last-changes/",
+//         "log": "${env.BUILD_URL}console",
+//         "comment": "${env.comment}",
+//         "imageName":"024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}",
+//         "serviceName":"${env.servicename}",
+//         "projectName":"${env.projectname}"}'
+//     """
+// }
+
 def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
     sh """
-        #!/bin/sh -e\n curl -k --location --request POST '${api}' \
-        --header 'Content-Type: application/json' \
-        --data '{
-        "env": "${envi}",
-        "admin": "${admin}",
-        "telegramId": "${telegramId}",
-        "builder": "${env.BUILD_USER}",
-        "jobName": "${env.JOB_NAME}",
-        "tag": "${env.tag}",
-        "token": "${env.randomToken}",
-        "approvalUrl": "${env.BUILD_URL}input/",
-        "diff": "${env.BUILD_URL}last-changes/",
-        "log": "${env.BUILD_URL}console",
-        "comment": "${env.comment}",
-        "imageName":"024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}",
-        "serviceName":"${env.servicename}",
-        "projectName":"${env.projectname}"}'
+echo "
+#!/bin/bash
+IP='notify-udp-service.infras-prod.svc.cluster.local'
+PORT=8081
+MESSAGE='{\"api\":\"${api}\",\"time\":1691397277,\"data\":[\"### ${envi}环境发布,请审批 ###
+\\n- 申请人: ${env.BUILD_USER}\\n- 构建名称: ${env.JOB_NAME}\\n- 构建分支: ${env.tag}\\n- 验证码: ${env.randomToken}\\n- 审批地址: ${env.BUILD_URL}input/\\n- 构建差异: ${env.BUILD_URL}last-changes/\\n- 构建日志: ${env.BUILD_URL}console\\n镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels
+\\n-n 发版备注:${env.comment}\"],\"sign\":\"b68f5dcd4d2a3d778d282567208e8690\"}'
+echo -n \"\$MESSAGE\" | nc -u -w1 \$IP \$PORT
+" > ./send.sh && /bin/bash ./send.sh
     """
 }
 
