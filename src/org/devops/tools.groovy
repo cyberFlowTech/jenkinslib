@@ -37,7 +37,7 @@ IP='notify-udp-service.infras-prod.svc.cluster.local'
 PORT=8081
 MESSAGE='{\"api\":\"${api}\",\"time\":1691397277,\"data\":[\"
 ### ${envi}环境发布,请审批 ###
-\- 申请人: ${env.BUILD_USER}
+- 申请人: ${env.BUILD_USER}
 - 构建名称: ${env.JOB_NAME}
 - 构建分支: ${env.tag}
 - 验证码: ${env.randomToken}
@@ -82,7 +82,7 @@ IP='notify-udp-service.infras-prod.svc.cluster.local'
 PORT=8081
 MESSAGE='{\"api\":\"${api}\",\"time\":1691397277,\"data\":[\"
 ### ${envi}环境发布,请审批 ###
-\- 申请人: ${env.BUILD_USER}
+- 申请人: ${env.BUILD_USER}
 - 构建名称: ${env.JOB_NAME}
 - 构建分支: ${env.tag}
 - 验证码: ${env.randomToken}
