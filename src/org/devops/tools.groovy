@@ -9,7 +9,7 @@ def PrintMsg(msg){
 
 // def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
 //     sh """
-//         #!/bin/sh -e\\n curl -k --location --request POST '${api}' \
+//         #!/bin/sh -e\\\n curl -k --location --request POST '${api}' \
 //         --header 'Content-Type: application/json' \
 //         --data '{
 //         "env": "${envi}",
@@ -33,17 +33,17 @@ def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {
     sh """
 echo "
 #!/bin/bash
-MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"### ${envi}环境发布,请审批 ###\\n
-- 申请人: ${env.BUILD_USER}\\n
-- 构建名称: ${env.JOB_NAME}\\n
-- 构建分支: ${env.tag}\\n
-- 验证码: ${env.randomToken}\\n
-- 审批地址: ${env.BUILD_URL}input/\\n
-- 构建差异: ${env.BUILD_URL}last-changes/\\n
-- 构建日志: ${env.BUILD_URL}console\\n
-- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\n
-- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\n
-- 发版备注:${env.comment}\\n
+MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"### ${envi}环境发布,请审批 ###\\\n
+- 申请人: ${env.BUILD_USER}\\\n
+- 构建名称: ${env.JOB_NAME}\\\n
+- 构建分支: ${env.tag}\\\n
+- 验证码: ${env.randomToken}\\\n
+- 审批地址: ${env.BUILD_URL}input/\\\n
+- 构建差异: ${env.BUILD_URL}last-changes/\\\n
+- 构建日志: ${env.BUILD_URL}console\\\n
+- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\\n
+- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\n
+- 发版备注:${env.comment}\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
 " > ./send.sh && /bin/bash ./send.sh
@@ -52,7 +52,7 @@ echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
 
 // def ReqPublishNotifyByTelegramWebhook(admin,telegramId,envi,api,result) {    
 //     sh """
-//         #!/bin/sh -e\\n curl -k --location --request POST '${api}' \
+//         #!/bin/sh -e\\\n curl -k --location --request POST '${api}' \
 //         --header 'Content-Type: application/json' \
 //         --data '{
 //         "env": "${envi}",
@@ -76,18 +76,18 @@ def ReqPublishNotifyByTelegramWebhook(admin,telegramId,envi,api,result) {
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${envi}环境发布完毕 ###\\n
-- 申请人: ${env.BUILD_USER}\\n
-- 构建名称: ${env.JOB_NAME}\\n
-- 构建分支: ${env.tag}\\n
-- 验证码: ${env.randomToken}\\n
-- 审批地址: ${env.BUILD_URL}input/\\n
-- 构建差异: ${env.BUILD_URL}last-changes/\\n
-- 构建日志: ${env.BUILD_URL}console\\n
-- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\n
-- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\n
-- 发版备注:${env.comment}\\n
-- 发版结果:${result}\\n
+### ${envi}环境发布完毕 ###\\\n
+- 申请人: ${env.BUILD_USER}\\\n
+- 构建名称: ${env.JOB_NAME}\\\n
+- 构建分支: ${env.tag}\\\n
+- 验证码: ${env.randomToken}\\\n
+- 审批地址: ${env.BUILD_URL}input/\\\n
+- 构建差异: ${env.BUILD_URL}last-changes/\\\n
+- 构建日志: ${env.BUILD_URL}console\\\n
+- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\\n
+- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\n
+- 发版备注:${env.comment}\\\n
+- 发版结果:${result}\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
 " > ./send.sh && /bin/bash ./send.sh
