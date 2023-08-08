@@ -125,9 +125,9 @@ def Approval(envi){
         // 推送消息到telegram
         input_message = "$Applier_name 申请发布项目 ${env.JOB_NAME} 到 ${envi} 环境"
         if (envi == "test"){
-            telegramAPI = "http://172.31.36.156:5001/telegramGroupNotify/jenkins/approvalTest"
+            telegramAPI = "m_1691395718"
         }else{
-            telegramAPI = "http://172.31.36.156:5001/telegramGroupNotify/jenkins/approvalProd"
+            telegramAPI = "m_1691395719"
         }
         ReqApprovalByTelegramWebhook(adminUser,approvalDD,envi,telegramAPI)
 
