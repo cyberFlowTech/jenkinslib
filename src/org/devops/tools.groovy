@@ -7,7 +7,7 @@ def PrintMsg(msg){
 // https://api.telegram.org/bot6230860729:AAE9Uj6JJYOap40Ie35UR-STW7ZKEYslNoI/sendMessage
 // -919670551
 
-// def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
+// def ReqApprovalByUdpNotifyServer(admin,telegramId,envi,api) {    
 //     sh """
 //         #!/bin/sh -e\\\\\\n curl -k --location --request POST '${api}' \
 //         --header 'Content-Type: application/json' \
@@ -29,7 +29,7 @@ def PrintMsg(msg){
 //     """
 // }
 
-def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
+def ReqApprovalByUdpNotifyServer(admin,telegramId,envi,api) {    
     sh """
 echo "
 #!/bin/bash
@@ -46,11 +46,11 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"### ${envi
 - 发版备注:${env.comment}\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
-" > ./send.sh && sed -i "s/http:\/\/jenkins:8080/https:\/\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
+" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
 }
 
-// def ReqPublishNotifyByTelegramWebhook(admin,telegramId,envi,api,result) {    
+// def ReqPublishNotifyByUdpNotifyServer(admin,telegramId,envi,api,result) {    
 //     sh """
 //         #!/bin/sh -e\\\\\\n curl -k --location --request POST '${api}' \
 //         --header 'Content-Type: application/json' \
@@ -71,7 +71,7 @@ echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
 //     """
 // }
 
-def ReqPublishNotifyByTelegramWebhook(admin,telegramId,envi,api,result) {    
+def ReqPublishNotifyByUdpNotifyServer(admin,telegramId,envi,api,result) {    
     sh """
 echo "
 #!/bin/bash
@@ -90,7 +90,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发版结果:${result}\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 30280
-" > ./send.sh && sed -i "s/http:\/\/jenkins:8080/https:\/\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
+" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
 }
 
@@ -155,11 +155,11 @@ def Approval(envi){
         // 推送消息到telegram
         input_message = "$Applier_name 申请发布项目 ${env.JOB_NAME} 到 ${envi} 环境"
         if (envi == "test"){
-            telegramAPI = "m_1691395718"
+            udpNotifyAPI = "m_1691395718"
         }else{
-            telegramAPI = "m_1691395719"
+            udpNotifyAPI = "m_1691395719"
         }
-        ReqApprovalByTelegramWebhook(adminUser,approvalDD,envi,telegramAPI)
+        ReqApprovalByUdpNotifyServer(adminUser,approvalDD,envi,udpNotifyAPI)
 
         // 生成待审批界面,阻塞
         def isAbort  = false   //取消按钮
@@ -225,8 +225,8 @@ def Notify(envi,result) {
     approvalDD = "sample"
 
     // 推送消息到telegram
-    telegramAPI = "m_1691395720"
-    ReqPublishNotifyByTelegramWebhook(adminUser,approvalDD,envi,telegramAPI,result)
+    udpNotifyAPI = "m_1691395720"
+    ReqPublishNotifyByUdpNotifyServer(adminUser,approvalDD,envi,udpNotifyAPI,result)
 
 
 }
