@@ -127,14 +127,14 @@ pipeline {
             } 
         }
 
-        stage('发布.'){
-            steps{
-                script{
-                    mimo.Publish(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", "infras", servicename, projectname, tag, servicepath, hostname, "${env.JOB_NAME}", arn)
-                }
-            }
-        }
-        
+        // stage('发布.'){
+        //     steps{
+        //         script{
+        //             mimo.Publish(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", "infras", servicename, projectname, tag, servicepath, hostname, "${env.JOB_NAME}", arn)
+        //         }
+        //     }
+        // }
+
     }
     
     post {
