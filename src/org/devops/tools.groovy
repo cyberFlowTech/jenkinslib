@@ -32,7 +32,7 @@ def PrintMsg(msg){
 def ReqApprovalByTelegramWebhook(admin,telegramId,envi,api) {    
     sh """
 echo "
-#!/bin/bash
+#!/bin/sh
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 ### ${envi}环境发布,请审批 ###
 - 申请人: ${env.BUILD_USER}
@@ -47,7 +47,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发版备注:${env.comment}
  -发版结果:${result}\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\"\\\$MESSAGE\\" | nc -u -w1 10.100.119.99 8081
-" > ./send.sh && /bin/bash ./send.sh
+" > ./send.sh && /bin/sh ./send.sh
     """
 }
 
@@ -75,9 +75,9 @@ echo -n \\"\\\$MESSAGE\\" | nc -u -w1 10.100.119.99 8081
 def ReqPublishNotifyByTelegramWebhook(admin,telegramId,envi,api,result) {    
     sh """
 echo "
-#!/bin/bash
+#!/bin/sh
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${envi}环境发布,请审批 ###
+### ${envi}环境发布完毕 ###
 - 申请人: ${env.BUILD_USER}
 - 构建名称: ${env.JOB_NAME}
 - 构建分支: ${env.tag}
@@ -90,7 +90,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发版备注:${env.comment}
  -发版结果:${result}\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\"\\\$MESSAGE\\" | nc -u -w1 10.100.119.99 8081
-" > ./send.sh && /bin/bash ./send.sh
+" > ./send.sh && /bin/sh ./send.sh
     """
 }
 
