@@ -46,7 +46,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels
 - 发版备注:${env.comment}
  -发版结果:${result}\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-echo -n \\"\\\$MESSAGE\\" | nc -u -w1 notify-udp-service.infras-prod.svc.cluster.local 8081
+echo -n \\"\\\$MESSAGE\\" | nc -u -w1 10.100.119.99 8081
 " > ./send.sh && /bin/bash ./send.sh
     """
 }
@@ -89,7 +89,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels
 - 发版备注:${env.comment}
  -发版结果:${result}\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-echo -n \\"\\\$MESSAGE\\" | nc -u -w1 notify-udp-service.infras-prod.svc.cluster.local 8081
+echo -n \\"\\\$MESSAGE\\" | nc -u -w1 10.100.119.99 8081
 " > ./send.sh && /bin/bash ./send.sh
     """
 }
