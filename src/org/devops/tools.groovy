@@ -33,7 +33,8 @@ def ReqApprovalByUdpNotifyServer(admin,telegramId,envi,api) {
     sh """
 echo "
 #!/bin/bash
-MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"### ${envi}环境发布,请审批 ###\\\\\\n
+MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
+### ${envi}环境发布,请审批 ###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
 - 构建分支: ${env.tag}\\\\\\n
@@ -76,7 +77,7 @@ def ReqPublishNotifyByUdpNotifyServer(admin,telegramId,envi,api,result) {
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${envi}环境发布完毕 ###\\\\\\n
+### ${envi}环境发布完毕;如果为生产环境,请访问rancher链接替换最新镜像名称进行手动发版。###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
 - 构建分支: ${env.tag}\\\\\\n
