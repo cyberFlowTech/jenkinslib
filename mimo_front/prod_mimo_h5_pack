@@ -32,7 +32,7 @@ pipeline {
         )
 
         string(
-            name: 'Tag', 
+            name: 'Version', 
             defaultValue: 'main', 
             description: '默认分支或者Tag'
         )
@@ -43,7 +43,7 @@ pipeline {
 
 
         // 传参转为环境变量
-        tag = "$params.Tag"
+        tag = "$params.Version"
         url = "$params.RepoUrl"
 
 
