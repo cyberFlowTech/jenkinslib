@@ -86,7 +86,7 @@ pipeline {
                     }else{
                         sh '''
                         
-                        cd /home/linxin/project/mimo_web_prod
+                        cd /home/jenkins/workspace/mimo_web_prod
                         
                         # relogin
                         docker logout

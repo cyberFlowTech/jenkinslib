@@ -79,17 +79,17 @@ pipeline {
             steps{
                 script{
                 sh """
-sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g" $JENKINS_HOME/workspace/test_mimo_pc_pack/.env.staging
+sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g" /home/jenkins/workspace/test_mimo_pc_pack/.env.staging
 # 运行docker打包
-docker run -i --rm --name nodejs_mime_pc -u root -v "$JENKINS_HOME/workspace/test_mimo_pc_pack:/mimo-pc" nodejs_client_web_mime_pc:latest /bin/bash -c "rm -rf mimoPc_测试 && rm -rf node_modules && rm -rf yarn.lock && yarn && yarn build:stage"
+docker run -i --rm --name nodejs_mime_pc -u root -v "/home/jenkins/workspace/test_mimo_pc_pack:/mimo-pc" nodejs_client_web_mime_pc:latest /bin/bash -c "rm -rf mimoPc_测试 && rm -rf node_modules && rm -rf yarn.lock && yarn && yarn build:stage"
 
 rm -rf ./pc
 mv ./mimoPc_测试 ./pc
-rm -rf $JENKINS_HOME/workspace/mimo_web_test/pc
-cp -rf ./pc $JENKINS_HOME/workspace/mimo_web_test
+rm -rf /home/jenkins/workspace/mimo_web_test/pc
+cp -rf ./pc /home/jenkins/workspace/mimo_web_test
 
 # 上传新包
-cd $JENKINS_HOME/workspace/mimo_web_test/pc
+cd /home/jenkins/workspace/mimo_web_test/pc
 aws s3 --profile mimosite cp static $PROD_CLIENT_WEB_MIME_PC_HOST/static --recursive
 """
                 }
