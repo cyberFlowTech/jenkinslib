@@ -1,0 +1,123 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+def skipRemainingStages = false   //当前节点是否跳过
+def input_message   //提示语
+def randomToken    //发布秘钥
+def skipadminUser = false
+
+
+pipeline {
+
+    agent {
+        label 'slave1'
+    }
+
+    options {
+        timestamps() // 在日志中打印时间
+        skipDefaultCheckout() // 删除隐式的checkout scm 语句
+        timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
+    }
+
+    parameters {
+        
+        // 基本参数/传参
+
+        string(
+            name: "RepoUrl",
+            defaultValue: '$GITLAB/mimo-web-h5.git',
+            description: '代码仓库地址'
+        )
+
+        string(
+            name: 'Tag', 
+            defaultValue: 'develop', 
+            description: '默认分支或者Tag'
+        )
+
+    }
+
+    environment {
+
+
+        // 传参转为环境变量
+        tag = "$params.Tag"
+        url = "$params.RepoUrl"
+
+
+        //生成随机数0-10000
+        max = 100000
+        randomToken = "${Math.abs(new Random().nextInt(max+1))}"
+        adminUser = "" // 审批人员姓名
+        approvalDD = ""   //审批人telegram名称
+        approval = "" // 是否需要审批
+
+
+    }
+
+    stages{
+
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(tag, url)
+                }
+            }
+        }
+
+        stage('输出与最近一次构建的差异.'){
+            steps{
+                script{
+                    tools.LastChanges()
+                }
+            }
+        }
+
+        stage('打dist包.'){
+            steps{
+                script{
+                sh """
+
+    sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/web3.mimo.immo/g" $JENKINS_HOME/workspace/prod_mimo_h5_pack/mime/src/api/api.js
+  docker run -i --rm --name nodejs_webmimeh5 -u root -v "$JENKINS_HOME/workspace/prod_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./mime" "build" 
+  cd mime/dist
+  tar -zcvf ../../mime_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  cd ../../
+  
+  docker run -i --rm --name nodejs_webmimeh5 -u root -v "$JENKINS_HOME/workspace/prod_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./wallet" "build" 
+  cd wallet/dist/wallet
+  tar -zcvf ../../../wallet_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  
+  cd ../../../
+  
+  rm -rf $JENKINS_HOME/workspace/mimo_web_prod/h5/mime
+  rm -rf $JENKINS_HOME/workspace/mimo_web_prod/h5/wallet
+  mkdir -p $JENKINS_HOME/workspace/mimo_web_prod/h5/mime
+  mkdir -p $JENKINS_HOME/workspace/mimo_web_prod/h5/wallet
+  tar -zxvf mime_$Version.tar.gz -C $JENKINS_HOME/workspace/mimo_web_prod/h5/mime
+  tar -zxvf wallet_$Version.tar.gz -C $JENKINS_HOME/workspace/mimo_web_prod/h5/wallet
+"""
+                }
+            }
+        }
+
+    }
+    
+    post {
+        always {
+            wrap([$class: 'BuildUser']) {
+                script{
+                    // 邮件
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    //telegram通知
+                    result = "${currentBuild.currentResult}"
+                    // tools.Notify(envi,result)
+                }
+            }
+        }
+    }
+
+}

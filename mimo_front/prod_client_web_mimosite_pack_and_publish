@@ -1,0 +1,142 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+def skipRemainingStages = false   //当前节点是否跳过
+def input_message   //提示语
+def randomToken    //发布秘钥
+def skipadminUser = false
+
+
+pipeline {
+
+    agent {
+        label 'slave1'
+    }
+
+    options {
+        timestamps() // 在日志中打印时间
+        skipDefaultCheckout() // 删除隐式的checkout scm 语句
+        timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
+    }
+
+    parameters {
+        
+        // 基本参数/传参
+
+        string(
+            name: "RepoUrl",
+            defaultValue: '$GITLAB/mimo-web-mimosite.git',
+            description: '代码仓库地址'
+        )
+
+
+        string(
+            name: 'AppCDN', 
+            defaultValue: 'https://res.mimo.immo/packages/mimo', 
+            description: 'appcdn'
+        )
+
+        string(
+            name: 'Version', 
+            defaultValue: '1.1.1_129', 
+            description: 'apk包版本'
+        )
+
+        string(
+            name: 'Tag', 
+            defaultValue: 'main', 
+            description: '默认分支或者Tag'
+        )
+
+    }
+
+    environment {
+
+
+        // 传参转为环境变量
+        tag = "$params.Tag"
+        url = "$params.RepoUrl"
+        appcdn = "$params.AppCDN"
+        version = "$params.Version"
+
+
+
+        //生成随机数0-10000
+        max = 100000
+        randomToken = "${Math.abs(new Random().nextInt(max+1))}"
+        adminUser = "" // 审批人员姓名
+        approvalDD = ""   //审批人telegram名称
+        approval = "" // 是否需要审批
+
+
+    }
+
+    stages{
+
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(tag, url)
+                }
+            }
+        }
+
+        stage('输出与最近一次构建的差异.'){
+            steps{
+                script{
+                    tools.LastChanges()
+                }
+            }
+        }
+
+        stage('打dist包.'){
+            steps{
+                script{
+                sh """
+rm -rf ./build
+# 运行docker打包
+docker run -i --rm --name nodejs_mimosite -u root -e REACT_APP_CDN=$appcdn -e REACT_APP_APKVERSION=$version -v "$JENKINS_HOME/workspace/prod_client_web_mimosite_pack_and_publish:/mimo-site" nodejs_client_web_mimosite:latest "yarn" "build"
+# 打包dist
+tar -zcf $version.tar.gz ./build
+"""
+                }
+            }
+        }
+        stage('把dist包发送到官网服务器.') {
+            steps{
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'mimositeProdServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''
+                rm -rf build
+                tar -zxvf $Version.tar.gz -C ./
+                cp -rf ./mimo-web/build build.bak
+                rm -rf ./mimo-web/build
+                cp -rf build ./mimo-web/
+                rm -rf $Version.tar.gz
+                ''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '$Version.tar.gz')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+            }
+        }
+        stage('清除本地包.') {
+            steps{
+                sh '''rm -rf $Version.tar.gz'''
+            }
+        }
+
+    }
+    
+    post {
+        always {
+            wrap([$class: 'BuildUser']) {
+                script{
+                    // 邮件
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    //telegram通知
+                    result = "${currentBuild.currentResult}"
+                    // tools.Notify(envi,result)
+                }
+            }
+        }
+    }
+
+}

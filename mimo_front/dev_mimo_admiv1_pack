@@ -1,0 +1,109 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+def skipRemainingStages = false   //当前节点是否跳过
+def input_message   //提示语
+def randomToken    //发布秘钥
+def skipadminUser = false
+
+
+pipeline {
+
+    agent {
+        label 'slave1'
+    }
+
+    options {
+        timestamps() // 在日志中打印时间
+        skipDefaultCheckout() // 删除隐式的checkout scm 语句
+        timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
+    }
+
+    parameters {
+        
+        // 基本参数/传参
+
+        string(
+            name: "RepoUrl",
+            defaultValue: '$GITLAB/mimo-web-admin.git',
+            description: '代码仓库地址'
+        )
+
+        string(
+            name: 'Tag', 
+            defaultValue: 'test', 
+            description: '默认分支或者Tag'
+        )
+
+    }
+
+    environment {
+
+
+        // 传参转为环境变量
+        tag = "$params.Tag"
+        url = "$params.RepoUrl"
+
+
+        //生成随机数0-10000
+        max = 100000
+        randomToken = "${Math.abs(new Random().nextInt(max+1))}"
+        adminUser = "" // 审批人员姓名
+        approvalDD = ""   //审批人telegram名称
+        approval = "" // 是否需要审批
+
+
+    }
+
+    stages{
+
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(tag, url)
+                }
+            }
+        }
+
+        stage('输出与最近一次构建的差异.'){
+            steps{
+                script{
+                    tools.LastChanges()
+                }
+            }
+        }
+
+        stage('打dist包.'){
+            steps{
+                script{
+                sh """
+ sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime\\//https:\\/\\/mimo-dev.mimo.immo\\//g" $JENKINS_HOME/workspace/dev_mimo_admiv1_pack/config/publishTest.env.js
+ docker run -i --rm --name nodejs_webadmiv1 -u root -v "$JENKINS_HOME/workspace/dev_mimo_admiv1_pack:/workspace" nodejs_client_web_admi_v1:14.15.0 "npm" "run" "PublishTest"
+ cd dist/PublishTest
+ rm -rf $JENKINS_HOME/workspace/mimo_web_dev/admi-v1
+ cp -rf admi-v1 $JENKINS_HOME/workspace/mimo_web_dev/
+"""
+                }
+            }
+        }
+
+    }
+    
+    post {
+        always {
+            wrap([$class: 'BuildUser']) {
+                script{
+                    // 邮件
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    //telegram通知
+                    result = "${currentBuild.currentResult}"
+                    // tools.Notify(envi,result)
+                }
+            }
+        }
+    }
+
+}

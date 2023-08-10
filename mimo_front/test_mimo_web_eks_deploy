@@ -1,0 +1,183 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+def skipRemainingStages = false   //当前节点是否跳过
+def input_message   //提示语
+def randomToken    //发布秘钥
+def skipadminUser = false
+
+
+pipeline {
+
+    agent {
+        label 'slave1'
+    }
+
+    options {
+        timestamps() // 在日志中打印时间
+        skipDefaultCheckout() // 删除隐式的checkout scm 语句
+        timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
+    }
+
+    parameters {
+        
+        choice(
+            name: 'Option', 
+            choices: ['Deploy', 'Rollback', 'Expand'], 
+            description: 'Deploy部署指定Tag; Rollback回滚到指定Tag; Expand快速扩容(不保存yaml文件)'
+        )
+
+        string(
+           name: "Replicas",
+           defaultValue: '1',
+           description: '副本数'
+        )
+        
+        string(
+           name: "Hostname",
+           defaultValue: 'mimo-test.mimo.immo',
+           description: 'hostname'
+        )
+        
+        string(
+           name: "Servicepath",
+           defaultValue: '/front,/s',
+           description: 'servicepath'
+        )
+        
+        string(
+           name: "Servicename",
+           defaultValue: 'mimo-web',
+           description: 'servicename'
+        )
+        
+        string(
+            name: "Directory",
+            defaultValue: '/home/RD.Center/jenkins/DEV_MIMO_WEB_EKS_DEPLOY',
+            description: 'path',
+        )
+        
+    }
+
+    environment {
+        option = "$params.Option"
+    }
+
+
+    stages {
+        // stage('Pull the codes.') {
+        //     steps{
+        //         script {
+        //             if ( option == 'Rollback' ){
+        //                 echo "rollback does not need this."
+        //             }else if ( option == 'Expand' ){
+        //                 echo "expand does not need this."
+        //             }else{
+        //                 checkout scmGit(branches: [[name: '$Tag']], extensions: [], userRemoteConfigs: [[credentialsId: '36af8cfe-cad6-456b-88d0-b7ee16c5e425', url: '$GITLAB/server/php/mime.git']])
+        //                 lastChanges since: 'LAST_SUCCESSFUL_BUILD', format:'SIDE',matching: 'LINE'
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Build the image and push it to ACR.'){
+            steps{
+                script{
+                    if ( option == 'Rollback' ){
+                        echo "rollback does not need this."
+                    }else if ( option == 'Expand' ){
+                        echo "expand does not need this."
+                    }else{
+                        sh '''
+                        
+                        cd /home/linxin/project/mimo_web
+                        
+                        # relogin
+                        docker logout
+                        docker login --username AWS 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
+                        
+                        # build and tag 
+                        docker build -t 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:mimo-web_test -f deploy/docker/Dockerfile .
+                        
+                        # push the image
+                        docker push 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:mimo-web_test
+
+                        '''
+                    }
+
+                }
+            }
+        }
+        
+        stage('Generate the kubernetes yaml config.'){
+            steps{
+                script{
+                    if ( option == 'Expand' ){
+                        echo "expand does not need this."
+                    }else{
+                        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+                        execCommand: '''
+                        # generate the kubernetes yaml config
+                        /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras test test $Replicas $Hostname mimo $Servicename $Directory $Servicepath arn:aws:acm:ap-southeast-1:024905375334:certificate/af277c1b-a5b9-4c1c-93c6-ebc1ea340390
+
+                        ''', 
+                        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
+                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                    }
+
+                }
+            }
+
+        }
+
+ 
+        stage('Deploy.'){
+            steps{
+                script{
+                    if ( option == 'Rollback' ){
+                        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+                        execCommand: '''
+                        cd ./jenkins/test_mimo_web_eks_deploy
+                        kubectl apply -f deployment.yaml
+                        ''', 
+                        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
+                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                    }else if ( option == 'Expand' ){
+                        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+                        execCommand: '''
+                        kubectl -n mimo-test scale deployment `kubectl get deployment -n mimo-test|awk '{print $1}'|grep -v NAME` --replicas=$Replicas
+                        ''', 
+                        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
+                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                    }else{
+                        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+                        execCommand: '''
+                        cd ./jenkins/test_mimo_web_eks_deploy
+                        kubectl delete deployment -n mimo-test `kubectl get deployment -n mimo-test|grep mimo-web|awk '{print $1}'|grep -v NAME`
+                        kubectl apply -f deployment.yaml
+                        kubectl apply -f service.yaml
+                        ''', execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
+                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            wrap([$class: 'BuildUser']) {
+                script{
+                    // 邮件
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    //telegram通知
+                    result = "${currentBuild.currentResult}"
+                    tools.Notify(envi,result)
+                }
+            }
+        }
+    }
+
+}
