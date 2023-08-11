@@ -78,16 +78,18 @@ pipeline {
         stage('打dist包.'){
             steps{
                 sh """
+  rm -rf mime.tar.gz
+  rm -rf wallet.tar.gz
   sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-dev.mimo.immo/g" /home/jenkins/workspace/dev_mimo_h5_pack/mime/src/api/api.js
   
   docker run -i --rm --name nodejs_webmimeh5 -u root -v "/home/jenkins/workspace/dev_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./mime" "build" 
   cd mime/dist
-  /usr/bin/tar -zcvf ../../mime_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  /usr/bin/tar -zcvf ../../mime.tar.gz ./css ./favicon.ico ./img ./index.html ./js
   cd ../../
   
   docker run -i --rm --name nodejs_webmimeh5 -u root -v "/home/jenkins/workspace/dev_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./wallet" "build" 
   cd wallet/dist/wallet
-  /usr/bin/tar -zcvf ../../../wallet_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  /usr/bin/tar -zcvf ../../../wallet.tar.gz ./css ./favicon.ico ./img ./index.html ./js
   
   cd ../../../
   
@@ -95,8 +97,8 @@ pipeline {
   rm -rf /home/jenkins/workspace/mimo_web_dev/h5/wallet
   mkdir -p /home/jenkins/workspace/mimo_web_dev/h5/mime
   mkdir -p /home/jenkins/workspace/mimo_web_dev/h5/wallet
-  /usr/bin/tar -zxvf mime_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/mime
-  /usr/bin/tar -zxvf wallet_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/wallet
+  /usr/bin/tar -zxvf mime.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/mime
+  /usr/bin/tar -zxvf wallet.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/wallet
 """
             }
         }
