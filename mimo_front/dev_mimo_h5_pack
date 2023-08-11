@@ -77,7 +77,6 @@ pipeline {
 
         stage('打dist包.'){
             steps{
-                script{
                 sh """
   sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-dev.mimo.immo/g" /home/jenkins/workspace/dev_mimo_h5_pack/mime/src/api/api.js
   
@@ -99,7 +98,6 @@ pipeline {
   tar -zxvf mime_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/mime
   tar -zxvf wallet_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_dev/h5/wallet
 """
-                }
             }
         }
 
