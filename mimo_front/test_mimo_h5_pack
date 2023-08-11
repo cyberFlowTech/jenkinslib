@@ -80,17 +80,18 @@ pipeline {
                 script{
                 sh """
 
-
+  rm -rf mime.tar.gz
+  rm -rf wallet.tar.gz
   sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g" /home/jenkins/workspace/test_mimo_h5_pack/mime/src/api/api.js
   
   docker run -i --rm --name nodejs_webmimeh5 -u root -v "/home/jenkins/workspace/test_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./mime" "build" 
   cd mime/dist
-  tar -zcvf ../../mime_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  tar -zcvf ../../mime.tar.gz ./css ./favicon.ico ./img ./index.html ./js
   cd ../../
   
   docker run -i --rm --name nodejs_webmimeh5 -u root -v "/home/jenkins/workspace/test_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./wallet" "build" 
   cd wallet/dist/wallet
-  tar -zcvf ../../../wallet_$Version.tar.gz ./css ./favicon.ico ./img ./index.html ./js
+  tar -zcvf ../../../wallet.tar.gz ./css ./favicon.ico ./img ./index.html ./js
   
   cd ../../../
   
@@ -98,8 +99,8 @@ pipeline {
   rm -rf /home/jenkins/workspace/mimo_web_test/h5/wallet
   mkdir -p /home/jenkins/workspace/mimo_web_test/h5/mime
   mkdir -p /home/jenkins/workspace/mimo_web_test/h5/wallet
-  tar -zxvf mime_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_test/h5/mime
-  tar -zxvf wallet_$Version.tar.gz -C /home/jenkins/workspace/mimo_web_test/h5/wallet
+  tar -zxvf mime.tar.gz -C /home/jenkins/workspace/mimo_web_test/h5/mime
+  tar -zxvf wallet.tar.gz -C /home/jenkins/workspace/mimo_web_test/h5/wallet
 """
                 }
             }
