@@ -223,7 +223,7 @@ fi
 if [ \$Newhostname == "True" ]
 then
 # gsed -E -i 's/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/web3.mimo.immo/g' /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/common/const/baseUrl.const.js
-gsed -E -i 's/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g' /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/common/const/baseUrl.const.js
+/usr/local/bin/gsed -E -i 's/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g' /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/common/const/baseUrl.const.js
 fi
 
 echo "relogin."
