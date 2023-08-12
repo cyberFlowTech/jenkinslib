@@ -264,8 +264,8 @@ echo "stop the hbuilderx"
             steps{
                 
                 sh """
-                cp \$Branch\$Tag.apk /home/linxin/ftp/upload/Share/TestAPP/test_app
-                cp \$Branch\$Tag.ipa /home/linxin/ftp/upload/Share/TestAPP/test_app
+                cp \$Branch\$Tag.apk /Users/apple/Documents/ftp/Share/TestAPP/test_app
+                cp \$Branch\$Tag.ipa /Users/apple/Documents/ftp/Share/TestAPP/test_app
 """
             }
         }
