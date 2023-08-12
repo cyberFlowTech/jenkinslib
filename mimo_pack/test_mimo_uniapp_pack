@@ -215,9 +215,9 @@ echo "更换环信IM配置为生产配置."
 rm -rf ./utils/request.js
 rm -rf ./easeIMKIT/init.js
 rm -rf ./easeIMKIT/WebIM.js
-cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/request.js ./utils/
-cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/init.js ./easeIMKit/
-cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/WebIM.js ./easeIMKit/
+cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/request.js ./utils/
+cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKit/
+cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/WebIM.js ./easeIMKit/
 fi
 
 if [ \$Newhostname == "True" ]
