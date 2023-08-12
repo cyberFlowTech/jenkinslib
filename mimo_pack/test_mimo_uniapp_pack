@@ -1,0 +1,289 @@
+@Library('jenkinslib') _  
+//调用方法库文件
+def tools = new org.devops.tools()
+def mimo = new org.devops.mimo()
+
+def skipRemainingStages = false   //当前节点是否跳过
+def input_message   //提示语
+def randomToken    //发布秘钥
+def skipadminUser = false
+
+
+pipeline {
+
+    agent {
+        label 'macos4'
+    }
+
+    options {
+        timestamps() // 在日志中打印时间
+        skipDefaultCheckout() // 删除隐式的checkout scm 语句
+        timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
+    }
+
+    parameters {
+        
+        // 基本参数/传参
+
+        string(
+            name: "RepoUrl",
+            defaultValue: '$$GITLAB/client/app/mime',
+            description: '代码仓库地址'
+        )
+
+        string(
+            name: 'Branch', 
+            defaultValue: 'feature_test_1.2.3', 
+            description: '默认分支或者Tag'
+        )
+        
+        string(
+            name: 'Tag', 
+            defaultValue: '1.2.4', 
+            description: '测试维护的版本号'
+        )
+
+        string(
+            name: "AppID",
+            defaultValue: '__UNI__B87D91C',
+            description: '证书ID'
+        )
+
+        // 业务参数/设置默认值
+
+        string(
+           name: "AndroidPackageName",
+           defaultValue: 'com.sailfishpay.mime',
+           description: '安卓包名'
+        )
+        
+        string(
+           name: "IosBundleID",
+           defaultValue: 'com.mimo.uni.test',
+           description: 'IOS基带ID'
+        )
+        
+        string(
+           name: "CertAlias",
+           defaultValue: 'mimo',
+           description: '证书别名'
+        )
+        
+        string(
+           name: "CertPath",
+           defaultValue: '/Users/apple/Documents/mimo打包证书/测试环境证书/android/mimo.keystore',
+           description: '证书路径'
+        )
+    
+        
+        string(
+           name: "HBuilderAccount",
+           defaultValue: '18810463426@163.com',
+           description: 'hbuilder打包账号'
+        )
+
+        string(
+           name: "HBuilderPassword",
+           defaultValue: 'linXin123',
+           description: 'hbuilder打包账号密码'
+        )
+
+        string(
+           name: "CertPassword",
+           defaultValue: '20190523',
+           description: '证书密码'
+        )
+
+        string(
+           name: "IsCustom",
+           defaultValue: 'false',
+           description: '是否使用自定义基座'
+        )
+
+        string(
+           name: "Safemode",
+           defaultValue: 'false',
+           description: '是否使用安心打包'
+        )
+
+        string(
+           name: "Channels",
+           defaultValue: 'Default',
+           description: '安卓平台要打的渠道包,取值有"google","yyb","360","huawei","xiaomi","oppo","vivo"'
+        )
+
+        string(
+           name: "TargetSdkVersion",
+           defaultValue: '28',
+           description: 'TargetSdkVersion'
+        )
+
+        string(
+           name: "IosCertPath",
+           defaultValue: '/Users/apple/Documents/mimo打包证书/测试环境证书/ios/mimo_uni_apns.mobileprovision',
+           description: 'IOS证书路径'
+        )
+
+        string(
+           name: "IosCertPassword",
+           defaultValue: '123123',
+           description: 'IOS证书密码"'
+        )
+
+        string(
+           name: "TargetSdkVersion",
+           defaultValue: '28',
+           description: 'TargetSdkVersion'
+        )
+
+        string(
+           name: "P12Path",
+           defaultValue: '/Users/apple/Documents/mimo打包证书/测试环境证书/ios/mimo_uni_dev.p12',
+           description: 'IOS P12 路径'
+        )
+
+        string(
+           name: "env",
+           defaultValue: 'false',
+           description: '后台API环境,true为生产,false为测试'
+        )
+
+        string(
+           name: "IosSupportedDevice",
+           defaultValue: 'iPhone',
+           description: 'IOS包支持安装的设备'
+        )
+
+        string(
+           name: "Newhostname",
+           defaultValue: 'True',
+           description: '是否更换新的域名(前端代码一直没有更新)'
+        )
+
+        string(
+           name: "sonarscanner",
+           defaultValue: '/Users/apple/sonar-scanner-4.8.0.2856-macosx/bin/sonar-scanner',
+           description: '代码扫描可执行文件目录'
+        )
+
+        choice(
+            name: 'IMConfig', 
+            choices: ['Test', 'Prod'], 
+            description: '环信IM配置 Test:测试环境 Prod:生产环境'
+        )
+
+    }
+
+    environment {
+
+
+        // 传参转为环境变量
+        tag = "$params.Branch"
+        url = "$params.RepoUrl"
+
+
+    }
+
+    stages{
+
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(tag, url)
+                }
+            }
+        }
+
+        stage('调用hbuilderx命令行本地编译并上传云打包。'){
+            steps{
+
+                sh """
+
+echo "start the hbuilderx"
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
+nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
+sleep 5
+echo "删掉旧的包"
+rm -rf /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new/*.apk
+rm -rf /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new/*.ipa
+rm -rf /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new/*.aab
+
+
+if [ $IMConfig == "Prod" ]
+then
+echo "更换环信IM配置为生产配置."
+rm -rf ./utils/request.js
+rm -rf ./easeIMKIT/init.js
+rm -rf ./easeIMKIT/WebIM.js
+cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/request.js ./utils/
+cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/init.js ./easeIMKit/
+cp -rf /Users/apple/Documents/git/jenkins/workspace/scripts/mimo_huanxin/prod/WebIM.js ./easeIMKit/
+fi
+
+if [ $Newhostname == "True" ]
+then
+# gsed -E -i 's/https:\/\/rd-center.mimelabs.xyz\/RD-mime/https:\/\/web3.mimo.immo/g' /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new/common/const/baseUrl.const.js
+gsed -E -i 's/https:\/\/rd-center.mimelabs.xyz\/RD-mime/https:\/\/mimo-test.mimo.immo/g' /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new/common/const/baseUrl.const.js
+fi
+
+echo "relogin."
+/Applications/HBuilderX.app/Contents/Macos/cli user logout
+/Applications/HBuilderX.app/Contents/Macos/cli user login --username $HBuilderAccount --password $HBuilderPassword
+echo "Prepare Config And Pack."
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && ./getThePackage prepare $Env $AndroidPackageName $IosBundleID $AppID $Tag /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new $TargetSdkVersion
+
+if [ $Channels == "Default" ]
+then
+    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new --platform android,IOS --android.packagename $AndroidPackageName --android.androidpacktype 0 --android.certalias $CertAlias --android.certfile $CertPath --android.certpassword $CertPassword --iscustom $IsCustom --safemode $Safemode --ios.bundle $IosBundleID --ios.supporteddevice $IosSupportedDevice --ios.isprisonbreak false --ios.profile $IosCertPath --ios.certfile $P12Path --ios.certpassword $IosCertPassword
+else
+    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new --platform android,IOS --android.packagename $AndroidPackageName --android.androidpacktype 0 --android.certalias $CertAlias --android.certfile $CertPath --android.certpassword $CertPassword --iscustom $IsCustom --safemode $Safemode --android.channels $Channels --ios.bundle $IosBundleID --ios.supporteddevice $IosSupportedDevice --ios.isprisonbreak false --ios.profile $IosCertPath --ios.certfile $P12Path --ios.certpassword $IosCertPassword
+fi
+
+echo "Get The Package."
+cd /Users/apple/Documents/git/jenkins/workspace/scripts
+if [ $Channels == "Default" ]
+then
+./getThePackage bothDownload test_client_app_mime_cloudpack_new $Branch$Tag.apk $Branch$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new
+elif [ $Channels == "google" ]
+then
+./getThePackage bothDownload test_client_app_mime_cloudpack_new $Branch$Tag.aab $Branch$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new
+else
+./getThePackage bothDownload test_client_app_mime_cloudpack_new $Branch$Tag $Branch$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_client_app_mime_cloudpack_new
+fi
+
+
+echo "stop the hbuilderx"
+name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf($2)}'`
+kill -9 $name
+# ssh root@172.16.13.208 /root/script/sonar.sh ${JOB_NAME}  $Branch git@gitlab.infras.tech:client/app/mime.git
+                """
+            }
+        }
+
+        stage('将包发送到ftp服务器。'){
+            steps{
+                
+                sh """
+                scp $Branch$Tag.apk root@172.16.13.20:/home/linxin/ftp/upload/Share/TestAPP/test_app
+                scp $Branch$Tag.ipa root@172.16.13.20:/home/linxin/ftp/upload/Share/TestAPP/test_app
+"""
+            }
+        }
+    }
+    
+    post {
+        always {
+            wrap([$class: 'BuildUser']) {
+                script{
+                    // 邮件
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: '$DEFAULT_RECIPIENTS'
+                    // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
+                    //telegram通知
+                    result = "${currentBuild.currentResult}"
+                    tools.Notify(envi,result)
+                }
+            }
+        }
+    }
+
+}
