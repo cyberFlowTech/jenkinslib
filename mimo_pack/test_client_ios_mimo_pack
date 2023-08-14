@@ -1,0 +1,58 @@
+pipeline {
+    
+    agent {
+      label 'macos4'
+    }
+
+
+    parameters {
+        
+        // 基本参数/传参
+
+        string(
+            name: "Package",
+            defaultValue: 'Debug',
+            description: '包类型'
+        )
+
+        string(
+            name: 'Branch', 
+            defaultValue: 'master', 
+            description: '默认分支或者Tag'
+        )
+
+        string(
+            name: "RepoUrl",
+            defaultValue: '$GITLAB/mimo-app-ios.git',
+            description: '代码仓库地址'
+        )
+
+    }
+
+    environment {
+
+
+        // 传参转为环境变量
+        branch = "$params.Branch"
+        url = "$params.RepoUrl"
+
+
+    }
+    
+    stages {
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(branch, url)
+                }
+            }
+        }
+        stage('command') {
+            steps{
+                sh '''
+xcodebuild archive -workspace MIMO.xcworkspace -scheme MIMO -configuration Debug -archivePath ./ CODE_SIGN_IDENTITY="iPhone Developer: HENG MA (9AX47U4TZT)" PROVISIONING_PROFILE="367d16f6-c1c1-4fec-b475-d7a521299b8d"
+                '''
+            }
+        }
+    }
+}
