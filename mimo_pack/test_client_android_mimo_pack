@@ -19,6 +19,30 @@ pipeline {
             description: '代码仓库地址'
         )
 
+        string(
+            name: "Type",
+            defaultValue: 'assembleStagingDebug',
+            description: '打包类型'
+        )
+
+        string(
+            name: "PackagePath",
+            defaultValue: 'app/build/outputs/apk',
+            description: '出包路径'
+        )
+
+        string(
+            name: "stage",
+            defaultValue: 'staging',
+            description: '阶段名'
+        )
+
+        string(
+            name: "buildType",
+            defaultValue: 'debug',
+            description: '构建类型'
+        )
+
     }
 
     environment {
@@ -37,7 +61,7 @@ pipeline {
                 cd mimo
                 git checkout $Version
                 
-                docker run -i --rm --name android_mimo_app -u root -v "/Users/apple/Documents/git/jenkins/workspace/bumpVersionCode/mimo:/data" -v "/home/linxin/jenkins/jenkins_mount/keyStore/mimo-lite:/data/keystore" android:gradle7.5 bash -c "chmod 777 /data/gradlew && cd /data/app && ../gradlew bumpVersionCode"
+                docker run -i --rm --name android_mimo_app -u root -v "/Users/apple/Documents/git/jenkins/workspace/bumpVersionCode/mimo:/data" -v "/Users/apple/Documents/ftp/Share/keyStore/mimo-lite:/data/keystore" android:gradle7.5 bash -c "chmod 777 /data/gradlew && cd /data/app && ../gradlew bumpVersionCode"
                 git add --all
                 git commit -m "bump version code by jenkins."
                 
