@@ -1,0 +1,29 @@
+pipeline {
+    agent {
+        label 'macos4'
+    }
+
+    parameters {
+
+        string(
+            name: 'Version', 
+            defaultValue: '1.1.4', 
+            description: 'apk包版本'
+        )
+    }
+
+    stages {
+
+        stage('将最新的包上传到S3方便官网访问.') {
+            steps {
+                sh '''
+# 上传新包
+aws s3 --profile mimosite cp /Users/apple/Documents/ftp/Share/TestAPP/prod_app/mimo_$Version.apk s3://mimo-apkdl/packages/
+# 刷新cdn
+#aws --profile mimosite cloudfront create-invalidation --distribution-id $PROD_CLIENT_APP_MIME_ANDROID_PUBLISH_S3_DISTRIBUTION_ID --paths "/*"
+                
+                '''
+            }
+        }
+    }
+}
