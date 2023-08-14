@@ -201,7 +201,7 @@ pipeline {
 
 echo "start the hbuilderx"
 #export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-#nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
+nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
 sleep 5
 echo "删掉旧的包"
 rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.apk
@@ -253,8 +253,8 @@ fi
 
 
 echo "stop the hbuilderx"
-#name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
-#kill -9 \$name
+name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
+kill -9 \$name
 # ssh root@172.16.13.208 /root/script/sonar.sh \${JOB_NAME}  \$Branch git@gitlab.infras.tech:client/app/mime.git
                 """
             }
