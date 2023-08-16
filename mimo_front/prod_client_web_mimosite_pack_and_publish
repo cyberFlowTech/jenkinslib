@@ -95,7 +95,7 @@ pipeline {
             steps{
                 script{
                 sh """
-rm -rf ./dist
+rm -rf ./build
 # 运行docker打包
 docker run -i --rm --name nodejs_mimosite -u root -e REACT_APP_CDN=$appcdn -e REACT_APP_APKVERSION=$version -v "/home/jenkins/workspace/prod_client_web_mimosite_pack_and_publish:/mimo-site" nodejs_client_web_mimosite:latest "yarn" "build"
 
