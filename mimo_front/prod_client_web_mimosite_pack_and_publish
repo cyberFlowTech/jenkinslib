@@ -91,38 +91,45 @@ pipeline {
             }
         }
 
-        stage('打dist包.'){
+        stage('打dist包并构建镜像上传.'){
             steps{
                 script{
                 sh """
-rm -rf ./build
+rm -rf ./dist
 # 运行docker打包
 docker run -i --rm --name nodejs_mimosite -u root -e REACT_APP_CDN=$appcdn -e REACT_APP_APKVERSION=$version -v "/home/jenkins/workspace/prod_client_web_mimosite_pack_and_publish:/mimo-site" nodejs_client_web_mimosite:latest "yarn" "build"
-# 打包dist
-tar -zcf $version.tar.gz ./build
+
+# relogin
+docker logout
+docker login --username AWS 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
+
+# build and tag 
+docker build -t 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:mmsite_prod -f deploy/docker/Dockerfile .
+
+# push the image
+docker push 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:mmsite_prod
+
 """
                 }
             }
         }
-        stage('把dist包发送到官网服务器.') {
+        stage('部署.') {
             steps{
-                sshPublisher(publishers: [sshPublisherDesc(configName: 'mimositeProdServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''
-                rm -rf build
-                tar -zxvf $Version.tar.gz -C ./
-                cp -rf ./mimo-web/build build.bak
-                rm -rf ./mimo-web/build
-                cp -rf build ./mimo-web/
-                rm -rf $Version.tar.gz
-                ''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '$Version.tar.gz')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
-            }
-        }
-        stage('清除本地包.') {
-            steps{
-                sh '''rm -rf $Version.tar.gz'''
-            }
-        }
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+                execCommand: '''
+                # generate the kubernetes yaml config
+                /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras prod prod 1 mimosite.mimo.immo mimo mmsite /home/RD.Center/jenkins/prod_mmsite_web_eks_deploy / arn:aws:acm:ap-southeast-1:024905375334:certificate/af277c1b-a5b9-4c1c-93c6-ebc1ea340390
+                kubectl delete deployment -n mimo-prod `kubectl get deployment -n mimo-prod|grep mmsite|awk '{print $1}'|grep -v NAME`
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
 
+                ''', 
+                execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/prod_mmsite_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
+                sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+            }
+        }
     }
+
     
     post {
         always {
