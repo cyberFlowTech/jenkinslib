@@ -119,6 +119,7 @@ docker push 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:mmsite_prod
                 execCommand: '''
                 # generate the kubernetes yaml config
                 /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras prod prod 1 mimosite.mimo.immo mimo mmsite /home/RD.Center/jenkins/prod_mmsite_web_eks_deploy / arn:aws:acm:ap-southeast-1:024905375334:certificate/af277c1b-a5b9-4c1c-93c6-ebc1ea340390
+                cd ./jenkins/prod_mmsite_web_eks_deploy
                 kubectl delete deployment -n mimo-prod `kubectl get deployment -n mimo-prod|grep mmsite|awk '{print $1}'|grep -v NAME`
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
