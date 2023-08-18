@@ -196,7 +196,7 @@ pipeline {
                             error 'manifest.json存在试用插件，打包终止。'
                         }
                     }catch(e) { // input false
-                        currentBuild.currentResult = "FAILURE: manifest.json存在试用插件，打包终止。"
+                        ${currentBuild.currentResult} = "FAILURE: manifest.json存在试用插件，打包终止。"
                         throw e
                     }
                 }
