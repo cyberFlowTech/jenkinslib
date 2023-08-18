@@ -193,7 +193,7 @@ pipeline {
                         if ( grepResult == "试用" ) {
                             error 'manifest.json存在试用插件，打包终止。'
                         }else{
-                            error "manifest.json不存在试用插件，可以继续打包"
+                            echo "manifest.json不存在试用插件，可以继续打包"
                         }
                     }catch(e) { // input false
                         throw e
