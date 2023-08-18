@@ -187,7 +187,8 @@ pipeline {
             steps{
                 script{
                     try {
-                        def result = sh(script: "echo `grep 试用 ./manifest.json` | awk '{print length(\$0)}'", returnStdout: true).trim()
+                        def fff = sh(script: "grep 试用 ./manifest.json", returnStdout: true).trim()
+                        def result = sh(script: "echo ${#${fff}}", returnStdout: true).trim()
                         echo ${result}
                         if ( "${result}" == 0) {
                             echo "manifest.json不存在试用插件，可以继续打包"
