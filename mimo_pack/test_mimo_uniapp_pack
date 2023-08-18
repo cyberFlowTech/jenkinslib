@@ -275,6 +275,8 @@ MESSAGE='{\\"api\\":\\"abcdefg\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 版本号: ${env.tag}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
+- apk地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.apk\\\\\\n
+- ipa地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.ipa\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
