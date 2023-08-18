@@ -280,11 +280,13 @@ fi
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"abcdefg\\",\\"time\\":1691397277,\\"data\\":[\\"
-### uniapp 测试环境云打包完毕 ###\\\\\\n
-- 申请人: ${env.BUILD_USER}\\\\\\n
-- 名称: ${env.JOB_NAME}\\\\\\n
+### uniapp 云打包 ###\\\\\\n
+- 执行人: ${env.BUILD_USER}\\\\\\n
+- 执行结果: "${currentBuild.currentResult}"\\\\\\n
+- 流水线名称: ${env.JOB_NAME}\\\\\\n
 - 分支: ${env.branch}\\\\\\n
 - 版本名称: ${env.tag}\\\\\\n
+- 版本编号: ${env.versioncode}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
 - apk地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.apk\\\\\\n
