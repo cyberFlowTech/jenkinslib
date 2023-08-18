@@ -154,7 +154,7 @@ pipeline {
             description: '环信IM配置 Test:测试环境 Prod:生产环境'
         )
 
-        choice(
+        string(
             name: 'FTPAddr', 
             defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app", 
             description: '出包地址'
