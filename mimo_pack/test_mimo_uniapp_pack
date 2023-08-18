@@ -113,12 +113,6 @@ pipeline {
         )
 
         string(
-           name: "TargetSdkVersion",
-           defaultValue: '28',
-           description: 'TargetSdkVersion'
-        )
-
-        string(
            name: "IosCertPath",
            defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_apns.mobileprovision',
            description: 'IOS证书路径'
@@ -128,12 +122,6 @@ pipeline {
            name: "IosCertPassword",
            defaultValue: '123123',
            description: 'IOS证书密码"'
-        )
-
-        string(
-           name: "TargetSdkVersion",
-           defaultValue: '28',
-           description: 'TargetSdkVersion'
         )
 
         string(
@@ -230,7 +218,7 @@ fi
             steps{
                 
                 sh """
-cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack \$TargetSdkVersion
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack
 """
             }
         }
