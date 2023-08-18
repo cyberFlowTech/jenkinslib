@@ -38,9 +38,15 @@ pipeline {
         )
         
         string(
-            name: 'Tag', 
+            name: 'VersionName', 
             defaultValue: '1.2.4', 
-            description: '测试维护的版本号'
+            description: '测试维护的版本名称'
+        )
+
+        string(
+            name: 'VersionCode', 
+            defaultValue: '144', 
+            description: '测试维护的版本编号'
         )
 
         string(
@@ -160,6 +166,12 @@ pipeline {
             description: '环信IM配置 Test:测试环境 Prod:生产环境'
         )
 
+        choice(
+            name: 'FTPAddr', 
+            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app", 
+            description: '出包地址'
+        )
+
     }
 
     environment {
@@ -168,7 +180,7 @@ pipeline {
         // 传参转为环境变量
         branch = "$params.Branch"
         url = "$params.RepoUrl"
-        tag = "$params.Tag"
+        tag = "$params.VersionName"
 
 
     }
@@ -182,25 +194,19 @@ pipeline {
                 }
             }
         }
-
-        stage('调用hbuilderx命令行本地编译并上传云打包。'){
+        stage('打开HbuilderX;判断环信配置。'){
             steps{
-
+                
                 sh """
-
-echo "start the hbuilderx"
+echo "Start the hbuilderx"
 #export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
 nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
 sleep 5
-echo "删掉旧的包"
 rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.apk
 rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.ipa
 rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.aab
-
-
 if [ \$IMConfig == "Prod" ]
 then
-echo "更换环信IM配置为生产配置."
 rm -rf ./utils/request.js
 rm -rf ./easeIMKIT/init.js
 rm -rf ./easeIMKIT/WebIM.js
@@ -208,48 +214,54 @@ cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/request.js ./utils/
 cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKit/
 cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/WebIM.js ./easeIMKit/
 fi
-
-
-echo "relogin."
+"""
+            }
+        }
+        stage('重新登录HBuilderX的打包账号。'){
+            steps{
+                
+                sh """
 /Applications/HBuilderX.app/Contents/Macos/cli user logout
 /Applications/HBuilderX.app/Contents/Macos/cli user login --username \$HBuilderAccount --password \$HBuilderPassword
-
-echo "Prepare Config And Pack."
-cd /Users/apple/Documents/git/jenkins/workspace/scripts/mimo-uniapp-packit && git pull && /usr/bin/python3 packit.py prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$Tag /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack \$TargetSdkVersion
+"""
+            }
+        }
+        stage('将参数写入manifest.json。'){
+            steps{
+                
+                sh """
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack \$TargetSdkVersion
+"""
+            }
+        }
+        stage('调用HBuilderX命令行,进行本地编译并开启云打包。'){
+            steps{
+                
+                sh """
 if [ \$Channels == "Default" ]
 then
     /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
 else
     /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --android.channels \$Channels --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
 fi
-
-echo "Get The Package."
-cd /Users/apple/Documents/git/jenkins/workspace/scripts/mimo-uniapp-packit
-if [ \$Channels == "Default" ]
-then
-/usr/bin/python3 packit.py download test_mimo_uniapp_pack \$Branch\$Tag.apk \$Branch\$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack
-elif [ \$Channels == "google" ]
-then
-/usr/bin/python3 packit.py download test_mimo_uniapp_pack \$Branch\$Tag.aab \$Branch\$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack
-else
-/usr/bin/python3 packit.py download test_mimo_uniapp_pack \$Branch\$Tag \$Branch\$Tag.ipa /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack
-fi
-
-
-echo "stop the hbuilderx"
-name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
-kill -9 \$name
-# ssh root@172.16.13.208 /root/script/sonar.sh \${JOB_NAME}  \$Branch git@gitlab.infras.tech:client/app/mime.git
-                """
+"""
             }
         }
-
-        stage('将包发送到ftp服务器。'){
+        stage('调用jenkinsapi获取日志并根据包链接将包下载到FTP指定目录。'){
             steps{
                 
                 sh """
-                cp \$Branch\$Tag.apk /Users/apple/Documents/ftp/Share/TestAPP/test_app
-                cp \$Branch\$Tag.ipa /Users/apple/Documents/ftp/Share/TestAPP/test_app
+cd /Users/apple/Documents/git/jenkins/workspace/scripts
+if [ \$Channels == "Default" ]
+then
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.apk \$Branch\$Tag.ipa \$FTPAddr
+elif [ \$Channels == "google" ]
+then
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.aab \$Branch\$Tag.ipa \$FTPAddr
+else
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag \$Branch\$Tag.ipa \$FTPAddr
+fi
+
 """
             }
         }
@@ -272,7 +284,7 @@ MESSAGE='{\\"api\\":\\"abcdefg\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 名称: ${env.JOB_NAME}\\\\\\n
 - 分支: ${env.branch}\\\\\\n
-- 版本号: ${env.tag}\\\\\\n
+- 版本名称: ${env.tag}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
 - apk地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.apk\\\\\\n
