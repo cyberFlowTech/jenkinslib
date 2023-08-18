@@ -182,38 +182,6 @@ pipeline {
                 }
             }
         }
-        stage('打开HbuilderX;判断环信配置。'){
-            steps{
-                
-                sh """
-echo "Start the hbuilderx"
-#export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
-sleep 5
-rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.apk
-rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.ipa
-rm -rf /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/*.aab
-if [ \$IMConfig == "Prod" ]
-then
-rm -rf ./utils/request.js
-rm -rf ./easeIMKIT/init.js
-rm -rf ./easeIMKIT/WebIM.js
-cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/request.js ./utils/
-cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKit/
-cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/WebIM.js ./easeIMKit/
-fi
-"""
-            }
-        }
-        stage('重新登录HBuilderX的打包账号。'){
-            steps{
-                
-                sh """
-/Applications/HBuilderX.app/Contents/Macos/cli user logout
-/Applications/HBuilderX.app/Contents/Macos/cli user login --username \$HBuilderAccount --password \$HBuilderPassword
-"""
-            }
-        }
         stage('通过golang脚本,将参数写入manifest.json和baseUrl.const.js。'){
             steps{
                 
