@@ -190,7 +190,7 @@ pipeline {
                     try {
                         def grepProcess = "grep 试用 ./manifest.json".execute()
                         def grepResult = grepProcess.text
-                        echo grepResult.length()
+                        echo "${grepResult.length()}"
                         if ( grepResult.length() > 0 ) {
                             echo "manifest.json不存在试用插件，可以继续打包"
                         }else{
