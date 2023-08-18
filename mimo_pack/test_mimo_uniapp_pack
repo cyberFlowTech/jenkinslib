@@ -195,7 +195,7 @@ pipeline {
                             echo "manifest.json不存在试用插件，可以继续打包"
                         }else{
                             error 'manifest.json存在试用插件，打包终止。'
-                            comment = 'manifest.json存在试用插件，打包终止。'
+                            env.comment = 'manifest.json存在试用插件，打包终止。'
                         }
                     }catch(e) { // input false
                         throw e
