@@ -188,8 +188,8 @@ pipeline {
             steps{
                 script{
                     try {
-                        def grepResult = sh(script: "set +e && grep 试用 --only-matching ./manifest.json", returnStdout: true).trim()
-                        if ( grepResult == "试用" ) {
+                        def code = sh(script: "set +e && grep 试用 --only-matching ./manifest.json", returnStdout: true)
+                        if ( code == 0 ) {
                             error 'manifest.json存在试用插件，打包终止。'
                         }else{
                             echo "manifest.json不存在试用插件，可以继续打包"
