@@ -264,12 +264,12 @@ Branch=`echo \$Branch | sed 's/\\//_/g'`
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.apk \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr
 elif [ \$Channels == "google" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.aab \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr
 else
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr
 fi
 
 """
