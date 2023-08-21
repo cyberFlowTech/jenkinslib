@@ -177,24 +177,16 @@ pipeline {
 
     stages{
 
-        stage('判断当前manifest.json文件是否存在试用版插件.'){
+        stage('通过golang脚本,调用jenkinsapi获取日志并根据包链接将包下载到FTP指定目录。'){
             steps{
-                script{
-                    try {
-                        def code = sh(script: "grep 试用 --only-matching ./manifest.json", returnStatus: true)
-                        println("code=${code}")
-                        if (code == 0 ) {
-                            error 'manifest.json存在试用插件，打包终止。'
-                        }else{
-                            echo "manifest.json不存在试用插件，可以继续打包"
-                        }
-                    }catch(e) { // input false
-                        throw e
-                    }
-                }
+                
+                sh """
+Branch=`echo feature/lyz-s3 | sed 's/\//_/g'`
+echo \$Branch
+
+"""
             }
         }
- 
     }
     
     post {
@@ -206,6 +198,7 @@ pipeline {
                     // emailext body: '\$DEFAULT_CONTENT', mimeType: 'text/html', subject: '\$DEFAULT_SUBJECT', to: "\${env.BUILD_USER}"
                     //telegram通知
                     result = "${currentBuild.currentResult}"
+
                 }
             }
         }
