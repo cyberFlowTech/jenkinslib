@@ -199,7 +199,27 @@ echo \$Branch
                     // emailext body: '\$DEFAULT_CONTENT', mimeType: 'text/html', subject: '\$DEFAULT_SUBJECT', to: "\${env.BUILD_USER}"
                     //telegram通知
                     result = "${currentBuild.currentResult}"
-
+                        sh """
+echo "
+#!/bin/bash
+Branch=`echo $Branch | sed 's/\\\\//_/g'`
+echo $Branch
+MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
+### uniapp cloudpack 测试包 ###\\\\\\n
+- 执行人: ${env.BUILD_USER}\\\\\\n
+- 执行结果: "${currentBuild.currentResult}"\\\\\\n
+- 流水线名称: ${env.JOB_NAME}\\\\\\n
+- 分支: ${env.branch}\\\\\\n
+- 版本名称: ${env.tag}\\\\\\n
+- 版本编号: ${env.versioncode}\\\\\\n
+- 差异: ${env.BUILD_URL}last-changes/\\\\\\n
+- 日志: ${env.BUILD_URL}console\\\\\\n
+- apk地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.apk\\\\\\n
+- ipa地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.ipa\\\\\\n
+\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
+echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
+" > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
+    """
                 }
             }
         }
