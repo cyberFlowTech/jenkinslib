@@ -202,8 +202,6 @@ echo \$Branch
                         sh """
 echo "
 #!/bin/bash
-Branch=`echo $Branch | sed 's/\\\\//_/g'`
-echo $Branch
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 ### uniapp cloudpack 测试包 ###\\\\\\n
 - 执行人: ${env.BUILD_USER}\\\\\\n
