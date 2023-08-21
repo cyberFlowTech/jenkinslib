@@ -181,9 +181,9 @@ pipeline {
             steps{
                 script{
                     try {
-                        def code = zsh(script: "grep name --only-matching ./manifest.json", returnStdout: true)
+                        def code = sh(script: "grep 试用 --only-matching ./manifest.json", returnStatus: true)
                         println("code=${code}")
-                        if ( code == 0 ) {
+                        if (code == 0 ) {
                             error 'manifest.json存在试用插件，打包终止。'
                         }else{
                             echo "manifest.json不存在试用插件，可以继续打包"
