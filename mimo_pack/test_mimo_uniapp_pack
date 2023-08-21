@@ -181,7 +181,7 @@ pipeline {
             steps{
                 
                 sh """
-Branch=`echo feature/lyz-s3 | sed 's///_/g'`
+Branch=`echo feature/lyz-s3 | sed 's/\\//_/g'`
 echo \$Branch
 
 """
