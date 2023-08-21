@@ -7,6 +7,8 @@ def skipRemainingStages = false   //当前节点是否跳过
 def input_message   //提示语
 def randomToken    //发布秘钥
 def skipadminUser = false
+def aborted = false
+def comment
 
 
 pipeline {
@@ -51,7 +53,7 @@ pipeline {
 
         string(
             name: "AppID",
-            defaultValue: '__UNI__B87D91C',
+            defaultValue: '__UNI__A876095',
             description: '证书ID'
         )
 
@@ -59,13 +61,13 @@ pipeline {
 
         string(
            name: "AndroidPackageName",
-           defaultValue: 'com.sailfishpay.mime',
+           defaultValue: 'social.cyberflow.mimoapp',
            description: '安卓包名'
         )
         
         string(
            name: "IosBundleID",
-           defaultValue: 'com.mimo.uni.test',
+           defaultValue: 'social.cyberflow.mimoapp',
            description: 'IOS基带ID'
         )
         
@@ -77,26 +79,26 @@ pipeline {
         
         string(
            name: "CertPath",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/android/mimo.keystore',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/android/mimo.keystore',
            description: '证书路径'
         )
     
         
         string(
            name: "HBuilderAccount",
-           defaultValue: '18810463426@163.com',
+           defaultValue: 'mmtestapplabs@outlook.com',
            description: 'hbuilder打包账号'
         )
 
         string(
            name: "HBuilderPassword",
-           defaultValue: 'linXin123',
+           defaultValue: '1Qaz2!dke2022%~13219!',
            description: 'hbuilder打包账号密码'
         )
 
         string(
            name: "CertPassword",
-           defaultValue: '20190523',
+           defaultValue: '123456',
            description: '证书密码'
         )
 
@@ -114,7 +116,7 @@ pipeline {
 
         string(
            name: "IosCertPath",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_apns.mobileprovision',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/mimo_uni_apns.mobileprovision',
            description: 'IOS证书路径'
         )
 
@@ -126,13 +128,13 @@ pipeline {
 
         string(
            name: "P12Path",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_dev.p12',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/mimo_uni_dev.p12',
            description: 'IOS P12 路径'
         )
 
         string(
            name: "Env",
-           defaultValue: 'false',
+           defaultValue: 'true',
            description: '后台API环境,true为生产,false为测试'
         )
 
@@ -150,13 +152,13 @@ pipeline {
 
         choice(
             name: 'IMConfig', 
-            choices: ['Test', 'Prod'], 
+            choices: ['Prod', 'Test'], 
             description: '环信IM配置 Test:测试环境 Prod:生产环境'
         )
 
         string(
             name: 'FTPAddr', 
-            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app", 
+            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/prod_app", 
             description: '出包地址'
         )
 
@@ -182,7 +184,23 @@ pipeline {
                 }
             }
         }
-
+        stage('判断当前manifest.json文件是否存在试用版插件.'){
+            steps{
+                script{
+                    try {
+                        def grepResult = sh(script: "grep 试用 --only-matching ./manifest.json", returnStdout: true).trim()
+                        echo grepResult
+                        if ( grepResult == "试用" ) {
+                            error 'manifest.json存在试用插件，打包终止。'
+                        }else{
+                            echo "manifest.json不存在试用插件，可以继续打包"
+                        }
+                    }catch(e) { // input false
+                        throw e
+                    }
+                }
+            }
+        }
         stage('输出与最近一次构建的差异.'){
             steps{
                 script{
@@ -214,7 +232,7 @@ sleep 3
             steps{
                 
                 sh """
-cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack
 if [ \$IMConfig == "Prod" ]
 then
 rm -rf ./easeIMKIT/init.js
@@ -230,9 +248,9 @@ fi
                 sh """
 if [ \$Channels == "Default" ]
 then
-    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
+    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
 else
-    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --android.channels \$Channels --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
+    /Applications/HBuilderX.app/Contents/Macos/cli pack --project /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack --platform android,IOS --android.packagename \$AndroidPackageName --android.androidpacktype 0 --android.certalias \$CertAlias --android.certfile \$CertPath --android.certpassword \$CertPassword --iscustom \$IsCustom --safemode false --android.channels \$Channels --ios.bundle \$IosBundleID --ios.supporteddevice \$IosSupportedDevice --ios.isprisonbreak false --ios.profile \$IosCertPath --ios.certfile \$P12Path --ios.certpassword \$IosCertPassword
 fi
 """
             }
@@ -244,12 +262,12 @@ fi
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.apk \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload prod_mimo_uniapp_pack \$Branch\$Tag.apk \$Branch\$Tag.ipa \$FTPAddr
 elif [ \$Channels == "google" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag.aab \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload prod_mimo_uniapp_pack \$Branch\$Tag.aab \$Branch\$Tag.ipa \$FTPAddr
 else
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$Tag \$Branch\$Tag.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload prod_mimo_uniapp_pack \$Branch\$Tag \$Branch\$Tag.ipa \$FTPAddr
 fi
 
 """
@@ -270,7 +288,7 @@ fi
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
-### uniapp 云打包 ###\\\\\\n
+### uniapp cloudpack 正式包 ###\\\\\\n
 - 执行人: ${env.BUILD_USER}\\\\\\n
 - 执行结果: "${currentBuild.currentResult}"\\\\\\n
 - 流水线名称: ${env.JOB_NAME}\\\\\\n
@@ -279,8 +297,8 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 版本编号: ${env.versioncode}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
-- apk地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.apk\\\\\\n
-- ipa地址: http://172.16.12.51:7050/Share/TestAPP/test_app/${env.branch}${env.tag}.ipa\\\\\\n
+- apk地址: http://172.16.12.51:7050/Share/TestAPP/prod_app/${env.branch}${env.tag}.apk\\\\\\n
+- ipa地址: http://172.16.12.51:7050/Share/TestAPP/prod_app/${env.branch}${env.tag}.ipa\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh

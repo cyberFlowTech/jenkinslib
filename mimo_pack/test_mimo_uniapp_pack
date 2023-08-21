@@ -288,7 +288,7 @@ fi
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
-### uniapp 云打包 ###\\\\\\n
+### uniapp cloudpack 测试包###\\\\\\n
 - 执行人: ${env.BUILD_USER}\\\\\\n
 - 执行结果: "${currentBuild.currentResult}"\\\\\\n
 - 流水线名称: ${env.JOB_NAME}\\\\\\n
