@@ -259,6 +259,7 @@ fi
             steps{
                 
                 sh """
+Branch=`echo \$Branch | sed 's/\//_/g'`
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
