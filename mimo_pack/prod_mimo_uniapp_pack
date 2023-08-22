@@ -116,19 +116,19 @@ pipeline {
 
         string(
            name: "IosCertPath",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/mimo_uni_apns.mobileprovision',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/mimapp_release_v1.mobileprovision',
            description: 'IOS证书路径'
         )
 
         string(
            name: "IosCertPassword",
-           defaultValue: '123123',
+           defaultValue: '123456',
            description: 'IOS证书密码"'
         )
 
         string(
            name: "P12Path",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/mimo_uni_dev.p12',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/线上环境证书/ios/app发布证书.p12',
            description: 'IOS P12 路径'
         )
 
