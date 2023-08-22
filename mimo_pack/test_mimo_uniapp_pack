@@ -23,146 +23,146 @@ pipeline {
         timeout(time:1, unit:'HOURS') // 流水线超时设置为1H
     }
 
-    // parameters {
+    parameters {
         
-    //     // 基本参数/传参
+        // 基本参数/传参
 
-    //     string(
-    //         name: "RepoUrl",
-    //         defaultValue: '$GITLAB/mimo-uniapp.git',
-    //         description: '代码仓库地址'
-    //     )
+        string(
+            name: "RepoUrl",
+            defaultValue: '$GITLAB/mimo-uniapp.git',
+            description: '代码仓库地址'
+        )
 
-    //     string(
-    //         name: 'Branch', 
-    //         defaultValue: 'feature_test_1.2.3', 
-    //         description: '默认分支或者Tag'
-    //     )
+        string(
+            name: 'Branch', 
+            defaultValue: 'feature_test_1.2.3', 
+            description: '默认分支或者Tag'
+        )
         
-    //     string(
-    //         name: 'VersionName', 
-    //         defaultValue: '1.2.4', 
-    //         description: '测试维护的版本名称'
-    //     )
+        string(
+            name: 'VersionName', 
+            defaultValue: '1.2.4', 
+            description: '测试维护的版本名称'
+        )
 
-    //     string(
-    //         name: 'VersionCode', 
-    //         defaultValue: '144', 
-    //         description: '测试维护的版本编号'
-    //     )
+        string(
+            name: 'VersionCode', 
+            defaultValue: '144', 
+            description: '测试维护的版本编号'
+        )
 
-    //     string(
-    //         name: "AppID",
-    //         defaultValue: '__UNI__B87D91C',
-    //         description: '证书ID'
-    //     )
+        string(
+            name: "AppID",
+            defaultValue: '__UNI__B87D91C',
+            description: '证书ID'
+        )
 
-    //     // 业务参数/设置默认值
+        // 业务参数/设置默认值
 
-    //     string(
-    //        name: "AndroidPackageName",
-    //        defaultValue: 'com.sailfishpay.mime',
-    //        description: '安卓包名'
-    //     )
+        string(
+           name: "AndroidPackageName",
+           defaultValue: 'com.sailfishpay.mime',
+           description: '安卓包名'
+        )
         
-    //     string(
-    //        name: "IosBundleID",
-    //        defaultValue: 'com.mimo.uni.test',
-    //        description: 'IOS基带ID'
-    //     )
+        string(
+           name: "IosBundleID",
+           defaultValue: 'com.mimo.uni.test',
+           description: 'IOS基带ID'
+        )
         
-    //     string(
-    //        name: "CertAlias",
-    //        defaultValue: 'mimo',
-    //        description: '证书别名'
-    //     )
+        string(
+           name: "CertAlias",
+           defaultValue: 'mimo',
+           description: '证书别名'
+        )
         
-    //     string(
-    //        name: "CertPath",
-    //        defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/android/mimo.keystore',
-    //        description: '证书路径'
-    //     )
+        string(
+           name: "CertPath",
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/android/mimo.keystore',
+           description: '证书路径'
+        )
     
         
-    //     string(
-    //        name: "HBuilderAccount",
-    //        defaultValue: '18810463426@163.com',
-    //        description: 'hbuilder打包账号'
-    //     )
+        string(
+           name: "HBuilderAccount",
+           defaultValue: '18810463426@163.com',
+           description: 'hbuilder打包账号'
+        )
 
-    //     string(
-    //        name: "HBuilderPassword",
-    //        defaultValue: 'linXin123',
-    //        description: 'hbuilder打包账号密码'
-    //     )
+        string(
+           name: "HBuilderPassword",
+           defaultValue: 'linXin123',
+           description: 'hbuilder打包账号密码'
+        )
 
-    //     string(
-    //        name: "CertPassword",
-    //        defaultValue: '20190523',
-    //        description: '证书密码'
-    //     )
+        string(
+           name: "CertPassword",
+           defaultValue: '20190523',
+           description: '证书密码'
+        )
 
-    //     string(
-    //        name: "IsCustom",
-    //        defaultValue: 'false',
-    //        description: '是否使用自定义基座'
-    //     )
+        string(
+           name: "IsCustom",
+           defaultValue: 'false',
+           description: '是否使用自定义基座'
+        )
 
-    //     string(
-    //        name: "Channels",
-    //        defaultValue: 'Default',
-    //        description: '安卓平台要打的渠道包,取值有"google","yyb","360","huawei","xiaomi","oppo","vivo"'
-    //     )
+        string(
+           name: "Channels",
+           defaultValue: 'Default',
+           description: '安卓平台要打的渠道包,取值有"google","yyb","360","huawei","xiaomi","oppo","vivo"'
+        )
 
-    //     string(
-    //        name: "IosCertPath",
-    //        defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_apns.mobileprovision',
-    //        description: 'IOS证书路径'
-    //     )
+        string(
+           name: "IosCertPath",
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_apns.mobileprovision',
+           description: 'IOS证书路径'
+        )
 
-    //     string(
-    //        name: "IosCertPassword",
-    //        defaultValue: '123123',
-    //        description: 'IOS证书密码"'
-    //     )
+        string(
+           name: "IosCertPassword",
+           defaultValue: '123123',
+           description: 'IOS证书密码"'
+        )
 
-    //     string(
-    //        name: "P12Path",
-    //        defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_dev.p12',
-    //        description: 'IOS P12 路径'
-    //     )
+        string(
+           name: "P12Path",
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_dev.p12',
+           description: 'IOS P12 路径'
+        )
 
-    //     string(
-    //        name: "Env",
-    //        defaultValue: 'false',
-    //        description: '后台API环境,true为生产,false为测试'
-    //     )
+        string(
+           name: "Env",
+           defaultValue: 'false',
+           description: '后台API环境,true为生产,false为测试'
+        )
 
-    //     string(
-    //        name: "IosSupportedDevice",
-    //        defaultValue: 'iPhone',
-    //        description: 'IOS包支持安装的设备'
-    //     )
+        string(
+           name: "IosSupportedDevice",
+           defaultValue: 'iPhone',
+           description: 'IOS包支持安装的设备'
+        )
 
-    //     string(
-    //        name: "sonarscanner",
-    //        defaultValue: '/Users/apple/sonar-scanner-4.8.0.2856-macosx/bin/sonar-scanner',
-    //        description: '代码扫描可执行文件目录'
-    //     )
+        string(
+           name: "sonarscanner",
+           defaultValue: '/Users/apple/sonar-scanner-4.8.0.2856-macosx/bin/sonar-scanner',
+           description: '代码扫描可执行文件目录'
+        )
 
-    //     choice(
-    //         name: 'IMConfig', 
-    //         choices: ['Test', 'Prod'], 
-    //         description: '环信IM配置 Test:测试环境 Prod:生产环境'
-    //     )
+        choice(
+            name: 'IMConfig', 
+            choices: ['Test', 'Prod'], 
+            description: '环信IM配置 Test:测试环境 Prod:生产环境'
+        )
 
-    //     string(
-    //         name: 'FTPAddr', 
-    //         defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app", 
-    //         description: '出包地址'
-    //     )
+        string(
+            name: 'FTPAddr', 
+            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app", 
+            description: '出包地址'
+        )
 
-    // }
+    }
 
     environment {
 
