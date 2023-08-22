@@ -236,7 +236,7 @@ cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/ap
 if [ \$IMConfig == "Prod" ]
 then
 rm -rf ./easeIMKIT/init.js
-cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKit/
+cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKIT/
 
 fi
 """
