@@ -235,6 +235,7 @@ sleep 3
 cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack
 if [ \$IMConfig == "Prod" ]
 then
+cd /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack
 rm -rf ./easeIMKIT/init.js
 cp -rf /Users/apple/Documents/ftp/Share/mimo_huanxin/prod/init.js ./easeIMKIT/
 
