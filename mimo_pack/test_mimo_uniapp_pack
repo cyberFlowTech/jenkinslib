@@ -128,7 +128,7 @@ pipeline {
 
         string(
            name: "P12Path",
-           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_dev.p12',
+           defaultValue: '/Users/apple/Documents/ftp/Share/打包证书/测试环境证书/ios/mimo_uni_apns.p12',
            description: 'IOS P12 路径'
         )
 
