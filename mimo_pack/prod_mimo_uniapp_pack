@@ -305,6 +305,11 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
+                        sh """
+echo "stop the hbuilderx"
+name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
+kill -9 \$name
+    """
                 }
             }
         }
