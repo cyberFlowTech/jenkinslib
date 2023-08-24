@@ -179,11 +179,14 @@ pipeline {
         stage('打开HbuilderX。'){
             steps{
                 
-                sh """
-echo "Start the hbuilderx"
-#export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
-sleep 3
+//                 sh """
+// echo "Start the hbuilderx"
+// #export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
+// nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
+// sleep 3
+// """
+                   sh """
+                   touch mimo_\$VersionName.apk
 """
             }
         }
@@ -198,11 +201,11 @@ sleep 3
                     // emailext body: '\$DEFAULT_CONTENT', mimeType: 'text/html', subject: '\$DEFAULT_SUBJECT', to: "\${env.BUILD_USER}"
                     //telegram通知
                     result = "${currentBuild.currentResult}"
-                        sh """
-echo "stop the hbuilderx"
-name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
-kill -9 \$name
-    """
+//                         sh """
+// echo "stop the hbuilderx"
+// name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
+// kill -9 \$name
+//     """
                 }
             }
         }
