@@ -156,7 +156,7 @@ pipeline {
                         cd ./jenkins/test_mimo_web_eks_deploy
                         kubectl delete deployment -n mimo-test `kubectl get deployment -n mimo-test|grep mimo-web|awk '{print $1}'|grep -v NAME`
                         kubectl apply -f deployment.yaml
-                        kubectl apply -f service.yaml
+                        #kubectl apply -f service.yaml
                         ''', execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
                         sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
                     }
