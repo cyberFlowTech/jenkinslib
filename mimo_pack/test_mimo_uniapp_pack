@@ -228,7 +228,7 @@ sleep 3
 """
             }
         }
-        stage('通过golang脚本,将参数写入manifest.json和baseUrl.const.js;判断环信IM配置。'){
+        stage('通过golang脚本,将参数写入manifest.json和baseUrl.const.js。'){
             steps{
                 
                 sh """
