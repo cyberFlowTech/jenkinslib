@@ -91,7 +91,7 @@ pipeline {
                     }else{
                         sh '''
                         
-                        cd /home/jenkins/workspace/mimo_web
+                        cd /home/jenkins/workspace/mimo_web_test
                         
                         # relogin
                         docker logout
