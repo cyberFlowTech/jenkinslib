@@ -37,7 +37,7 @@ pipeline {
         
         string(
            name: "Hostname",
-           defaultValue: 'mimo-test.mimo.immo',
+           defaultValue: 'mimo-test123.mimo.immo',
            description: 'hostname'
         )
         
@@ -55,7 +55,7 @@ pipeline {
         
         string(
             name: "Directory",
-            defaultValue: '/home/RD.Center/jenkins/DEV_MIMO_WEB_EKS_DEPLOY',
+            defaultValue: '/home/RD.Center/jenkins/test_mimo_web_eks_deploy',
             description: 'path',
         )
         

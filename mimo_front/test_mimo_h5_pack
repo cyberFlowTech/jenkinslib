@@ -82,7 +82,7 @@ pipeline {
 
   rm -rf mime.tar.gz
   rm -rf wallet.tar.gz
-  sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test.mimo.immo/g" /home/jenkins/workspace/test_mimo_h5_pack/mime/src/api/api.js
+  sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime/https:\\/\\/mimo-test123.mimo.immo/g" /home/jenkins/workspace/test_mimo_h5_pack/mime/src/api/api.js
   
   docker run -i --rm --name nodejs_webmimeh5 -u root -v "/home/jenkins/workspace/test_mimo_h5_pack:/workspace" nodejs_client_web_mime_h5:14.15.0 "npm" "run" "--prefix=./mime" "build" 
   cd mime/dist

@@ -79,7 +79,7 @@ pipeline {
             steps{
                 script{
                 sh """
- sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime\\//https:\\/\\/mimo-test.mimo.immo\\//g" /home/jenkins/workspace/test_mimo_admiv1_pack/config/publishTest.env.js
+ sed -i "s/https:\\/\\/rd-center.mimelabs.xyz\\/RD-mime\\//https:\\/\\/mimo-test123.mimo.immo\\//g" /home/jenkins/workspace/test_mimo_admiv1_pack/config/publishTest.env.js
  docker run -i --rm --name nodejs_webadmiv1 -u root -v "/home/jenkins/workspace/test_mimo_admiv1_pack:/workspace" nodejs_client_web_admi_v1:14.15.0 "npm" "run" "PublishTest"
  cd dist/PublishTest
  rm -rf /home/jenkins/workspace/mimo_web_test/admi-v1
