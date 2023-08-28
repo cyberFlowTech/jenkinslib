@@ -7,7 +7,7 @@ pipeline {
 
         string(
             name: 'FTPAddr', 
-            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/test_app/mimo_1.1.1.apk", 
+            defaultValue: "/Users/apple/Documents/ftp/Share/TestAPP/prod_app/mimo_1.1.1.apk", 
             description: '提审包地址'
         )
     }
@@ -18,7 +18,7 @@ pipeline {
             steps {
                 sh '''
 # 上传新包
-aws s3 --profile mimosite cp \$FTPAddr s3://mimo-apkdl/packages/
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr s3://mimo-apkdl/packages/
 # 刷新cdn
 #aws --profile mimosite cloudfront create-invalidation --distribution-id $PROD_CLIENT_APP_MIME_ANDROID_PUBLISH_S3_DISTRIBUTION_ID --paths "/*"
                 
