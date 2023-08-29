@@ -122,6 +122,7 @@ def Approval(envi){
     Applier_name = "${env.BUILD_USER}"
 
     // 开发环境和管理人员都不需要审批
+    // 测试环境去掉审批 2023.8.29
     if ( envi == "dev" ){
         approval = "NO"
     } else if ( Applier_name == "zhangkai"){
@@ -129,6 +130,8 @@ def Approval(envi){
     } else if ( Applier_name == "xiangbo"){
         approval = "NO"
     } else if ( Applier_name == "longhaijian"){
+        approval = "NO"
+    } else if ( envi == "test"){
         approval = "NO"
     }else{
         approval = "YES"
@@ -180,7 +183,7 @@ def Approval(envi){
             }
         }
     }else{
-        echo "dev环境发版或管理人员发版不需要走审批流程."
+        echo "dev/test环境发版或管理人员发版不需要走审批流程."
     }
 }
 
