@@ -171,6 +171,7 @@ pipeline {
         branch = "$params.Branch"
         url = "$params.RepoUrl"
         tag = "$params.VersionName"
+        isCustom = "$params.IsCustom"
 
 
     }
@@ -255,6 +256,14 @@ fi
                 sh """
 Branch=`echo \$Branch | sed 's/\\//_/g'`
 
+if [ \$IsCustom == "true" ]
+then
+
+mv /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/unpackage/debug/android_debug.apk \$FTPAddr/\$BranchDebug.apk
+mv /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/unpackage/debug/iOS_debug.ipa \$FTPAddr/\$BranchDebug.ipa
+
+else
+
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
@@ -266,6 +275,10 @@ else
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr
 fi
 
+fi
+
+
+
 """
             }
         }
@@ -275,11 +288,9 @@ fi
         always {
             wrap([$class: 'BuildUser']) {
                 script{
-                    // 邮件
-                    // emailext body: '\$DEFAULT_CONTENT', mimeType: 'text/html', subject: '\$DEFAULT_SUBJECT', to: '\$DEFAULT_RECIPIENTS'
-                    // emailext body: '\$DEFAULT_CONTENT', mimeType: 'text/html', subject: '\$DEFAULT_SUBJECT', to: "\${env.BUILD_USER}"
-                    //telegram通知
-                    result = "${currentBuild.currentResult}"
+    if ( env.isCustom == 'true' ){
+        env.tag="Debug"
+    }
                         sh """
 echo "
 #!/bin/bash
@@ -303,6 +314,7 @@ echo "stop the hbuilderx"
 name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
 kill -9 \$name
     """
+    
                 }
             }
         }
