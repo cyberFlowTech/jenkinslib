@@ -77,12 +77,10 @@ def ReqPublishNotifyByUdpNotifyServer(admin,telegramId,envi,api,result) {
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${envi}环境发布完毕;如果为生产环境,请访问rancher链接替换最新镜像名称进行手动发版。###\\\\\\n
+### ${envi} 环境发布完毕;如果为生产环境,请访问rancher链接替换最新镜像名称进行手动发版。###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
 - 构建分支: ${env.tag}\\\\\\n
-- 验证码: ${env.randomToken}\\\\\\n
-- 审批地址: ${env.BUILD_URL}input/\\\\\\n
 - 构建差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 构建日志: ${env.BUILD_URL}console\\\\\\n
 - 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\\\\\n
