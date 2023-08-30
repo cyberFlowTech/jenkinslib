@@ -188,7 +188,7 @@ pipeline {
                 sh """
 Branch=`echo \$Branch | sed 's/\\//_/g'`
 
-cd /Users/apple/Documents/git/jenkins/workspace/scripts
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull
 if [ \$Channels == "Default" ]
 then
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
