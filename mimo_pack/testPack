@@ -191,12 +191,12 @@ Branch=`echo \$Branch | sed 's/\\//_/g'`
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 elif [ \$Channels == "google" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 else
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 fi
 
 
