@@ -73,11 +73,20 @@ echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 // }
 
 def ReqPublishNotifyByUdpNotifyServer(admin,telegramId,envi,api,result) {    
+
+    if ( envi == 'prod' ){
+        text="生产环境镜像构建并推送完毕，请点击rancher链接手动替换镜像名称进行发版。"
+    }else if ( envi == 'test' ){
+        text="测试环境发布完毕。"
+    }else{
+        text="开发环境发布完毕。"
+    }
+
     sh """
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${envi} 环境发布完毕;如果为生产环境,请访问rancher链接替换最新镜像名称进行手动发版。###\\\\\\n
+### ${text} ###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
 - 构建分支: ${env.tag}\\\\\\n
@@ -91,6 +100,8 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
+
+
 }
 
 def LastChanges(){
@@ -121,6 +132,7 @@ def Approval(envi){
 
     // 开发环境和管理人员都不需要审批
     // 测试环境去掉审批 2023.8.29
+    // 生产环境去掉审批
     if ( envi == "dev" ){
         approval = "NO"
     } else if ( Applier_name == "zhangkai"){
@@ -130,6 +142,8 @@ def Approval(envi){
     } else if ( Applier_name == "longhaijian"){
         approval = "NO"
     } else if ( envi == "test"){
+        approval = "NO"
+    }else if ( envi == "prod"){
         approval = "NO"
     }else{
         approval = "YES"
