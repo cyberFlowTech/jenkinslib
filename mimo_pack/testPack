@@ -188,27 +188,16 @@ pipeline {
                 sh """
 Branch=`echo \$Branch | sed 's/\\//_/g'`
 
-if [ \$IsCustom == "true" ]
-then
-
-mv /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/unpackage/debug/android_debug.apk \$FTPAddr/\$BranchDebug.apk
-mv /Users/apple/Documents/git/jenkins/workspace/test_mimo_uniapp_pack/unpackage/debug/iOS_debug.ipa \$FTPAddr/\$BranchDebug.ipa
-
-else
-
 cd /Users/apple/Documents/git/jenkins/workspace/scripts
 if [ \$Channels == "Default" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
 elif [ \$Channels == "google" ]
 then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
 else
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr
+/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom
 fi
-
-fi
-
 
 
 """
