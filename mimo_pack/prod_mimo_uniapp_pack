@@ -201,13 +201,13 @@ pipeline {
                 }
             }
         }
-        stage('输出与最近一次构建的差异.'){
-            steps{
-                script{
-                    tools.LastChanges()
-                }
-            }
-        }
+        // stage('输出与最近一次构建的差异.'){
+        //     steps{
+        //         script{
+        //             tools.LastChanges()
+        //         }
+        //     }
+        // }
         stage('打开HbuilderX。'){
             steps{
                 
