@@ -268,3 +268,24 @@ def PushImageToEcr(option, env, imageAddr, imageRepo, serviceName, tag){
         """
     }
 }
+
+// seoul
+
+def BuildImage(option, env, imageAddr, serviceName, tag){
+    sh """
+    cp /home/jenkins/dbConfig/mimo/seoul/* ./config/prod/
+    # relogin
+    docker logout
+    docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southnorth-1`
+    docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
+    """
+}
+
+def Push(option, env, imageAddr, serviceName, tag){
+
+    sh """
+    # relogin
+    docker push ${imageAddr}/${serviceName}:${tag}
+    """
+
+}
