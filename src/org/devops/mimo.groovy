@@ -274,6 +274,7 @@ def PushImageToEcr(option, env, imageAddr, imageRepo, serviceName, tag){
 def Build(option, env, imageAddr, serviceName, tag){
     sh """
     cp /home/jenkins/dbConfig/mimo/seoul_test/* ./config/test/
+    sed -i "s/notify-udp-service.infras-prod.svc.cluster.local/13.212.162.101:31164/g" ./components/UdpClient.php
     # relogin
     docker logout
     docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
