@@ -150,7 +150,7 @@ pipeline {
             }
         }
 
-        stage('部署.'){
+        stage('生成yaml文件部署.'){
             steps{
                 script{
                     mimo.Deploy(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, projectname, tag, servicepath, "${env.JOB_NAME}")
