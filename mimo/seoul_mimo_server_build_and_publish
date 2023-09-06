@@ -52,12 +52,6 @@ pipeline {
         // 业务参数/设置默认值
         
         string(
-           name: "Hostname",
-           defaultValue: 'mimo-test123-seoul.mimo.immo',
-           description: '域名'
-        )
-        
-        string(
            name: "Projectname",
            defaultValue: 'mimo',
            description: '项目名称'
@@ -67,19 +61,6 @@ pipeline {
            name: "Servicename",
            defaultValue: 'api',
            description: '服务名称'
-        )
-    
-        
-        string(
-           name: "Servicepath",
-           defaultValue: '/',
-           description: '服务对应的路由(通过k8s部署的服务对应的ingress路由)'
-        )
-
-        string(
-           name: "Arn",
-           defaultValue: 'arn:aws:acm:ap-southeast-1:024905375334:certificate/af277c1b-a5b9-4c1c-93c6-ebc1ea340390',
-           description: 'aws平台申请的https证书(对应域名)'
         )
 
         string(
@@ -165,6 +146,14 @@ pipeline {
             steps{
                 script{
                     mimo.Push(option, envi, "024905375334.dkr.ecr.ap-northeast-2.amazonaws.com", servicename, tag)                
+                }
+            }
+        }
+
+        stage('部署.'){
+            steps{
+                script{
+                    mimo.Deploy(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, projectname, tag, servicepath, "${env.JOB_NAME}")
                 }
             }
         }

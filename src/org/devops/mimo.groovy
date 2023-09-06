@@ -289,3 +289,53 @@ def Push(option, env, imageAddr, serviceName, tag){
     """
 
 }
+
+// 生产作废
+def Deploy(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname) {
+    if ( option == 'Rollback' ){
+        command = """
+        /home/ec2-user/eks/go/bin/go run /home/ec2-user/eks/genDeployV2/genDeployV2.go aws-ecr-key ${imageAddr} ${env} ${tag} ${replicas} ${projectname} ${servicename} /home/ec2-user/jenkins/${jobname}
+        cd ./jenkins/${jobname}
+        kubectl apply -f deployment.yaml
+        """
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'seoulJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, 
+        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }else if ( option == 'Expand' ){
+        command = """
+        kubectl -n ${projectname}-${env} scale deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'` --replicas=${replicas}
+        """
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'seoulJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, 
+        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }else{
+        if ( env == "prod"){
+            command = """
+            # 生产环境每次tag都不同,直接apply
+            /home/ec2-user/eks/go/bin/go run /home/ec2-user/eks/genDeployV2/genDeployV2.go aws-ecr-key ${imageAddr} ${env} ${tag} ${replicas} ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
+            cd ./jenkins/${jobname}
+            kubectl apply -f deployment.yaml
+            kubectl apply -f service.yaml
+            # 重启日志服务
+            sleep 1
+            kubectl -n monitoring delete daemonset loki-promtail && cd /home/RD.Center/eks/promtail && kubectl apply -f promtail-daemonset.yaml
+        """
+        }else{
+            command = """
+            /home/ec2-user/eks/go/bin/go run /home/ec2-user/eks/genDeployV2/genDeployV2.go aws-ecr-key ${imageAddr} ${env} ${tag} ${replicas} ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
+            kubectl -n ${projectname}-${env} delete deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'`
+            cd ./jenkins/${jobname}
+            kubectl apply -f deployment.yaml
+            kubectl apply -f service.yaml
+            # 重启日志服务
+            # sleep 1
+            # kubectl -n monitoring delete daemonset loki-promtail && cd /home/RD.Center/eks/promtail && kubectl apply -f promtail-daemonset.yaml
+        """
+        }
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'seoulJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }
+}
