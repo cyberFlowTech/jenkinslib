@@ -33,7 +33,7 @@ pipeline {
 
         string(
             name: 'Tag', 
-            defaultValue: '2.0.40', 
+            defaultValue: 'test', 
             description: '默认分支或者Tag'
         )
         
@@ -45,7 +45,7 @@ pipeline {
 
         string(
             name: "Environment",
-            defaultValue: 'prod',
+            defaultValue: 'test',
             description: '将要发布的环境'
         )
 
@@ -53,7 +53,7 @@ pipeline {
         
         string(
            name: "Hostname",
-           defaultValue: 'web3-seoul.mimo.immo',
+           defaultValue: 'mimo-test123-seoul.mimo.immo',
            description: '域名'
         )
         
@@ -168,6 +168,7 @@ pipeline {
                 }
             }
         }
+
     }
     
     post {

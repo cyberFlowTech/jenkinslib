@@ -273,7 +273,7 @@ def PushImageToEcr(option, env, imageAddr, imageRepo, serviceName, tag){
 
 def BuildImage(option, env, imageAddr, serviceName, tag){
     sh """
-    cp /home/jenkins/dbConfig/mimo/seoul/* ./config/prod/
+    cp /home/jenkins/dbConfig/mimo/seoul_test/* ./config/test/
     # relogin
     docker logout
     docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southnorth-1`
