@@ -124,33 +124,15 @@ pipeline {
             }
         }
 
-        stage("编译/制作镜像.") {
+        stage("制作镜像并推送到仓库.") {
            steps{
                 script{
-                    mimo.BuildImage(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
-                }
-            }
-        }
-        
-        stage("发送审批请求,等待审批通过."){
-            steps{
-                wrap([$class: 'BuildUser']) {
-                    script{
-                        tools.Approval(envi)
-                    }
-                }
-            } 
-        }
-
-        stage('审批通过,推送镜像.'){
-            steps{
-                script{
-                    mimo.Push(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)                
+                    mimo.Build(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
                 }
             }
         }
 
-        stage('生成yaml文件部署.'){
+        stage('生成配置文件并部署服务.'){
             steps{
                 script{
                     mimo.Deploy(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, projectname, tag, servicepath, "${env.JOB_NAME}")
