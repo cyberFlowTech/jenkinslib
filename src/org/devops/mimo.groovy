@@ -276,7 +276,7 @@ def BuildImage(option, env, imageAddr, serviceName, tag){
     cp /home/jenkins/dbConfig/mimo/seoul_test/* ./config/test/
     # relogin
     docker logout
-    docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southnorth-1`
+    docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
     docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
     """
 }
