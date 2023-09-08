@@ -92,7 +92,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 构建分支: ${env.tag}\\\\\\n
 - 构建差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 构建日志: ${env.BUILD_URL}console\\\\\\n
-- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras:${env.servicename}_${env.tag}\\\\\\n
+- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\\\\\n
 - 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\\\\n
 - 发版备注:${env.comment}\\\\\\n
 - 发版结果:${result}\\\\\\n
