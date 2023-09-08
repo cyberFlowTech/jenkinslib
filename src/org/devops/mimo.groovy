@@ -2,7 +2,7 @@ package org.devops
 
 // 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras
 
-def BuildImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
 
 
     if ( option == 'Rollback' ){
@@ -30,13 +30,13 @@ def BuildImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "prod"){
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/DockerfileProd .
-                docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/DockerfileProd .
+                docker push ${imageAddr}/${serviceName}:${tag}
             """
         }else{
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/Dockerfile .
-                docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
+                docker push ${imageAddr}/${serviceName}:${tag}
             """
         }
     }
@@ -44,7 +44,7 @@ def BuildImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
 
 
-def BuildTaskImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildTaskImageAndPush(option, env, imageAddr, serviceName, tag){
 
 
     if ( option == 'Rollback' ){
@@ -72,13 +72,13 @@ def BuildTaskImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "prod"){
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/task/DockerfileProd .
-                docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/task/DockerfileProd .
+                docker push ${imageAddr}/${serviceName}:${tag}
             """
         }else{
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/task/Dockerfile .
-                docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/task/Dockerfile .
+                docker push ${imageAddr}/${serviceName}:${tag}
             """
         }
     }
@@ -88,7 +88,7 @@ def BuildTaskImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
 
 
 
-def BuildImImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildImImageAndPush(option, env, imageAddr, serviceName, tag){
     if ( option == 'Rollback' ){
         echo "rollback does not need this."
     }else if ( option == 'Expand' ){
@@ -98,17 +98,18 @@ def BuildImImageAndPush(option, env, imageAddr, imageRepo, serviceName, tag){
         # relogin
         docker logout
         docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
-        docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/Dockerfile .
-        docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+        docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
+        docker push ${imageAddr}/${serviceName}:${tag}
         """
     }
 }
 
 // 生产作废
-def Publish(option, env, imageAddr, imageRepo, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
+def Publish(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
     if ( option == 'Rollback' ){
         command = """
-        /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key ${imageAddr}/${imageRepo} ${env} ${tag} ${replicas} ${hostname} ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname} ${servicepath} ${arn}
+        cd /home/RD.Center/eks/genDeploy && git pull
+        /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${tag} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
         cd ./jenkins/${jobname}
         kubectl apply -f deployment.yaml
         """
@@ -128,7 +129,8 @@ def Publish(option, env, imageAddr, imageRepo, servicename, projectname, tag, se
         if ( env == "prod"){
             command = """
             # 生产环境每次tag都不同,直接apply
-            /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key ${imageAddr}/${imageRepo} ${env} ${tag} ${replicas} ${hostname} ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname} ${servicepath} ${arn}
+            cd /home/RD.Center/eks/genDeploy && git pull
+            /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${tag} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
             cd ./jenkins/${jobname}
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
@@ -138,7 +140,8 @@ def Publish(option, env, imageAddr, imageRepo, servicename, projectname, tag, se
         """
         }else{
             command = """
-            /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key ${imageAddr}/${imageRepo} ${env} ${tag} ${replicas} ${hostname} ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname} ${servicepath} ${arn}
+            cd /home/RD.Center/eks/genDeploy && git pull
+            /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${tag} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
             kubectl -n ${projectname}-${env} delete deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'`
             cd ./jenkins/${jobname}
             kubectl apply -f deployment.yaml
@@ -162,7 +165,7 @@ def Sonarqube(Version,url){
 
 // 以下为生产专用
 
-def BuildMimoImage(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildMimoImage(option, env, imageAddr, serviceName, tag){
 
 
     if ( option == 'Rollback' ){
@@ -190,17 +193,17 @@ def BuildMimoImage(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "prod"){
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/DockerfileProd .
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/DockerfileProd .
             """
         }else{
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/Dockerfile .
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
             """
         }
     }
 }
 
-def BuildTaskImage(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildTaskImage(option, env, imageAddr, serviceName, tag){
 
 
     if ( option == 'Rollback' ){
@@ -228,11 +231,11 @@ def BuildTaskImage(option, env, imageAddr, imageRepo, serviceName, tag){
 
         if (env == "prod"){
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/task/DockerfileProd .
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/task/DockerfileProd .
             """
         }else{
             sh """
-                docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/task/Dockerfile .
+                docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/task/Dockerfile .
             """
         }
     }
@@ -241,7 +244,7 @@ def BuildTaskImage(option, env, imageAddr, imageRepo, serviceName, tag){
 }
 
 
-def BuildImImage(option, env, imageAddr, imageRepo, serviceName, tag){
+def BuildImImage(option, env, imageAddr, serviceName, tag){
     if ( option == 'Rollback' ){
         echo "rollback does not need this."
     }else if ( option == 'Expand' ){
@@ -251,12 +254,12 @@ def BuildImImage(option, env, imageAddr, imageRepo, serviceName, tag){
         # relogin
         docker logout
         docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
-        docker build -t ${imageAddr}/${imageRepo}:${serviceName}_${tag} -f deploy/docker/Dockerfile .
+        docker build -t ${imageAddr}/${serviceName}:${tag} -f deploy/docker/Dockerfile .
         """
     }
 }
 
-def PushImageToEcr(option, env, imageAddr, imageRepo, serviceName, tag){
+def PushImageToEcr(option, env, imageAddr, serviceName, tag){
     if ( option == 'Rollback' ){
         echo "rollback does not need this."
     }else if ( option == 'Expand' ){
@@ -264,7 +267,7 @@ def PushImageToEcr(option, env, imageAddr, imageRepo, serviceName, tag){
     }else{  
         sh """
         # relogin
-        docker push ${imageAddr}/${imageRepo}:${serviceName}_${tag}
+        docker push ${imageAddr}/${serviceName}:${tag}
         """
     }
 }
