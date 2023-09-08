@@ -146,7 +146,7 @@ pipeline {
         stage("编译/制作镜像.") {
            steps{
                 script{
-                    mimo.BuildMimoImage(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", "infras", servicename, tag)
+                    mimo.BuildMimoImage(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
                 }
             }
         }
@@ -164,7 +164,7 @@ pipeline {
         stage('审批通过,推送镜像.'){
             steps{
                 script{
-                    mimo.PushImageToEcr(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", "infras", servicename, tag)                
+                    mimo.PushImageToEcr(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)                
                 }
             }
         }
