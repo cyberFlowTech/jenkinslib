@@ -6,29 +6,25 @@ def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
 
     if (env == "dev"){
         sh """
-        Branch=`echo \${tag} | sed 's/\\//_/g'`
-        docker build -t ${imageAddr}/${serviceName}:${Branch} -f Dockerfile_dev .
-        docker push ${imageAddr}/${serviceName}:${Branch}
-        docker rmi ${imageAddr}/${serviceName}:${Branch}
+        docker build -t ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'` -f Dockerfile_dev .
+        docker push ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'`
+        docker rmi ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'`
         """
     }else{
         sh """
-        Branch=`echo \${tag} | sed 's/\\//_/g'`
-        docker build -t ${imageAddr}/${serviceName}:${Branch} -f Dockerfile .
-        docker push ${imageAddr}/${serviceName}:${Branch}
-        docker rmi ${imageAddr}/${serviceName}:${Branch}
+        docker build -t ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'` -f Dockerfile .
+        docker push ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'`
+        docker rmi ${imageAddr}/${serviceName}:`echo \${tag} | sed 's/\\//_/g'`
         """
     }
 }
 
 
 
-// 生产作废
 def Publish(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
     command = """
-        Branch=`echo \${tag} | sed 's/\\//_/g'`
         cd /home/RD.Center/eks/genDeploy && git pull
-        /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${Branch} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
+        /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} `echo \${tag} | sed 's/\\//_/g'` 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
         kubectl -n ${projectname}-${env} delete deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'`
         cd /home/RD.Center/jenkins/${jobname}
         kubectl apply -f deployment.yaml
