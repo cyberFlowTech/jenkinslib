@@ -22,7 +22,7 @@ def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
 
 
 
-def Publish(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
+def Publish(option, env, imageAddr, servicename, projectname, tag, jobname) {
     command = """
         cd /home/RD.Center/eks/genDeploy && git pull
         Branch=`echo \$Tag | sed 's/\\//_/g'`
