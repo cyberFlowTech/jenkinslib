@@ -7,6 +7,7 @@ def skipRemainingStages = false   //当前节点是否跳过
 def input_message   //提示语
 def randomToken    //发布秘钥
 def skipadminUser = false
+def tag
 
 
 pipeline {
@@ -82,7 +83,7 @@ pipeline {
 
 
         // 传参转为环境变量
-        tag = "$params.Tag"
+        branch = "$params.Tag"
         option = "$params.Option"
         url = "$params.RepoUrl"
         envi = "$params.Environment" // dev环境不需要审批
@@ -97,7 +98,10 @@ pipeline {
         stage('检出最新代码.') {
             steps{
                 script {
-                    tools.GitCheckOut(tag, url)
+                    tools.GitCheckOut(branch, url)
+                    sh """
+                    tag=`echo \$Branch | sed 's/\\//_/g'`
+                    """
                 }
             }
         }
