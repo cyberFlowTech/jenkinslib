@@ -83,7 +83,7 @@ pipeline {
 
 
         // 传参转为环境变量
-        branch = "$params.Tag"
+        tag = "$params.Tag"
         option = "$params.Option"
         url = "$params.RepoUrl"
         envi = "$params.Environment" // dev环境不需要审批
@@ -98,10 +98,7 @@ pipeline {
         stage('检出最新代码.') {
             steps{
                 script {
-                    tools.GitCheckOut(branch, url)
-                    sh """
-                    tag=`echo \$Branch | sed 's/\\//_/g'`
-                    """
+                    tools.GitCheckOut(tag, url)
                 }
             }
         }
