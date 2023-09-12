@@ -7,7 +7,7 @@ def skipRemainingStages = false   //当前节点是否跳过
 def input_message   //提示语
 def randomToken    //发布秘钥
 def skipadminUser = false
-def tag
+
 
 
 pipeline {
