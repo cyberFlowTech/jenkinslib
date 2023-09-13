@@ -114,7 +114,7 @@ pipeline {
         stage("编译/制作镜像.") {
            steps{
                 script{
-                    luckypet.BuildImageAndPush(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
+                    luckypet.BuildAPIImageAndPush(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
                 }
             }
         }
