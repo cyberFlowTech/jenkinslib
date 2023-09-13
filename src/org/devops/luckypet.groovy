@@ -20,6 +20,16 @@ def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
     }
 }
 
+def BuildAPIImageAndPush(option, env, imageAddr, serviceName, tag){
+
+    sh """
+    Branch=`echo \$Tag | sed 's/\\//_/g'`
+    docker build -t ${imageAddr}/${serviceName}:\$Branch -f ./Deploy/Dockerfile .
+    docker push ${imageAddr}/${serviceName}:\$Branch
+    docker rmi ${imageAddr}/${serviceName}:\$Branch
+    """
+}
+
 
 
 def Publish(option, env, imageAddr, servicename, projectname, tag, jobname) {
