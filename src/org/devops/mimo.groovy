@@ -326,6 +326,7 @@ def BuildPyMimoImageAndPush(option, env, imageAddr, serviceName, tag){
         echo "expand does not need this."
     }else{   
         sh """
+        cp -rf /home/jenkins/dbConfig/env ./
         # relogin
         docker logout
         docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
