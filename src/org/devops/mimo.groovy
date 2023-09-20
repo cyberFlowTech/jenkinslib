@@ -366,3 +366,45 @@ def BuildAdminLarkImageAndPush(option, env, imageAddr, serviceName, tag){
     docker rmi ${imageAddr}/${serviceName}:\$Branch
     """
 }
+
+// 生产作废
+def PublishWithoutRestartPromtail(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
+    if ( option == 'Rollback' ){
+        command = """
+        cd /home/RD.Center/eks/genDeploy && git pull
+        /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${tag} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
+        cd /home/RD.Center/jenkins/${jobname}
+        kubectl apply -f deployment.yaml
+        """
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, 
+        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }else if ( option == 'Expand' ){
+        command = """
+        kubectl -n ${projectname}-${env} scale deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'` --replicas=${replicas}
+        """
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, 
+        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }else{
+        if ( env == "prod"){
+            command = """
+            echo "生产环境请手动前往rancher发布。"
+        """
+        }else{
+            command = """
+            cd /home/RD.Center/eks/genDeploy && git pull
+            /usr/local/go/bin/go run /home/RD.Center/eks/genDeploy/genDeploy.go aws-ecr-key ${imageAddr} ${env} ${tag} 1 ${projectname} ${servicename} /home/RD.Center/jenkins/${jobname}
+            kubectl -n ${projectname}-${env} delete deployment `kubectl get deployment -n ${projectname}-${env} |grep ${servicename}-deployment|awk '{print \$1}'`
+            cd /home/RD.Center/jenkins/${jobname}
+            kubectl apply -f deployment.yaml
+            kubectl apply -f service.yaml
+        """
+        }
+        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
+        execCommand: command, execTimeout: 22000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
+        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+    }
+}
