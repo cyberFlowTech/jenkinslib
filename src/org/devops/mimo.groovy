@@ -351,3 +351,17 @@ def PublishPyMimo(option, env, imageAddr, servicename, projectname, tag, service
     execCommand: command, execTimeout: 22000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/${env.JOB_NAME}', remoteDirectorySDF: false, removePrefix: '', 
     sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
 }
+
+// mimo-admin-lark
+
+def BuildAdminLarkImageAndPush(option, env, imageAddr, serviceName, tag){
+
+    sh """
+    Branch=`echo \$Tag | sed 's/\\//_/g'`
+    docker build -t ${imageAddr}/${serviceName}:\$Branch -f ./Deploy/Dockerfile .
+    docker logout
+    docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
+    docker push ${imageAddr}/${serviceName}:\$Branch
+    docker rmi ${imageAddr}/${serviceName}:\$Branch
+    """
+}
