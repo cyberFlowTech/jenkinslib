@@ -357,6 +357,7 @@ def PublishPyMimo(option, env, imageAddr, servicename, projectname, tag, service
 def BuildAdminLarkImageAndPush(option, env, imageAddr, serviceName, tag){
 
     sh """
+    echo "1" > ./conf/.env
     Branch=`echo \$Tag | sed 's/\\//_/g'`
     docker build -t ${imageAddr}/${serviceName}:\$Branch -f ./Deploy/Dockerfile .
     docker logout
