@@ -3,25 +3,14 @@ package org.devops
 // 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras
 
 def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
-
-    if (env == "dev"){
-        sh """
-        Branch=`echo \$Tag | sed 's/\\//_/g'`
-        docker build -t ${imageAddr}/${serviceName}:\$Branch -f Dockerfile_dev .
-        docker logout
-        docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
-        docker push ${imageAddr}/${serviceName}:\$Branch
-        docker rmi ${imageAddr}/${serviceName}:\$Branch
-        """
-    }else{
-        sh """
-        docker build -t ${imageAddr}/${serviceName}:\$Branch -f Dockerfile .
-        docker logout
-        docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
-        docker push ${imageAddr}/${serviceName}:\$Branch
-        docker rmi ${imageAddr}/${serviceName}:\$Branch
-        """
-    }
+    sh """
+    Branch=`echo \$Tag | sed 's/\\//_/g'`
+    docker build -t ${imageAddr}/${serviceName}:\$Branch -f Dockerfile_dev .
+    docker logout
+    docker login --username AWS ${imageAddr} -p `aws ecr --profile mmdevops get-login-password --region ap-southeast-1`
+    docker push ${imageAddr}/${serviceName}:\$Branch
+    docker rmi ${imageAddr}/${serviceName}:\$Branch
+    """
 }
 
 def BuildAPIImageAndPush(option, env, imageAddr, serviceName, tag){
