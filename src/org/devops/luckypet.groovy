@@ -3,6 +3,17 @@ package org.devops
 // 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras
 
 def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
+    if (env == "dev") {
+        sh """
+        # dev 为正式服 isTest如果是true要改为false
+        sed -i "s/isTest = true/isTest = false/g" ./utils/index.js   
+        """
+    }else{
+        sh """
+        # 非dev 为测试服 isTest如果是false要改为true
+        sed -i "s/isTest = false/isTest = true/g" ./utils/index.js   
+        """
+    }
     sh """
     Branch=`echo \$Tag | sed 's/\\//_/g'`
     docker build -t ${imageAddr}/${serviceName}:\$Branch -f Dockerfile_dev .
