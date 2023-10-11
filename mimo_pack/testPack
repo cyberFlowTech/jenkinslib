@@ -162,6 +162,12 @@ pipeline {
             description: '出包地址'
         )
 
+        string(
+            name: 'TargetSDKVersion', 
+            defaultValue: '33', 
+            description: 'sdk版本号'
+        )
+
     }
 
     environment {
@@ -185,21 +191,24 @@ pipeline {
 // nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
 // sleep 3
 // """
+//                 sh """
+// Branch=`echo \$Branch | sed 's/\\//_/g'`
+
+// cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull
+// if [ \$Channels == "Default" ]
+// then
+// /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
+// elif [ \$Channels == "google" ]
+// then
+// /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
+// else
+// /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
+// fi
+
+
+// """
                 sh """
-Branch=`echo \$Branch | sed 's/\\//_/g'`
-
-cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull
-if [ \$Channels == "Default" ]
-then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-elif [ \$Channels == "google" ]
-then
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-else
-/Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-fi
-
-
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/testPack \$TargetSDKVersion
 """
             }
         }
