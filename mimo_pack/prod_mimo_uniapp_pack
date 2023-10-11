@@ -52,6 +52,12 @@ pipeline {
         )
 
         string(
+            name: 'TargetSDKVersion', 
+            defaultValue: '33', 
+            description: 'sdk版本号'
+        )
+
+        string(
             name: "AppID",
             defaultValue: '__UNI__A876095',
             description: '证书ID'
@@ -232,7 +238,7 @@ sleep 3
             steps{
                 
                 sh """
-cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack
+cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack \$TargetSDKVersion
 """
             }
         }
