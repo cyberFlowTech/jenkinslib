@@ -182,6 +182,13 @@ pipeline {
     }
 
     stages{
+        stage('检出最新代码.') {
+            steps{
+                script {
+                    tools.GitCheckOut(branch, url)
+                }
+            }
+        }
         stage('打开HbuilderX。'){
             steps{
                 
