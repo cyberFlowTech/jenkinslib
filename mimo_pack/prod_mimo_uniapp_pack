@@ -238,7 +238,9 @@ sleep 3
             steps{
                 
                 sh """
-cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack \$TargetSDKVersion
+#cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack \$TargetSDKVersion
+/Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/prod_mimo_uniapp_pack \$TargetSDKVersion
+
 """
             }
         }
