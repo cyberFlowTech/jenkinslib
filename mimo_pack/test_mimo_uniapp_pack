@@ -270,13 +270,14 @@ then
 elif [ \$Channels == "google" ]
 then
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.aab s3://mimo-apkdl/unrelease/test/
 else
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 fi
 
 /usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.apk s3://mimo-apkdl/unrelease/test/
 /usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.ipa s3://mimo-apkdl/unrelease/test/
-/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.aab s3://mimo-apkdl/unrelease/test/
+
 
 
 """
