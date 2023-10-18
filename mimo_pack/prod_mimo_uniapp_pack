@@ -272,6 +272,10 @@ else
 /Users/apple/go/bin/go run getThePackage.go bothDownload prod_mimo_uniapp_pack mimo_\$VersionName mimo_\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 fi
 
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/mimo_\$VersionName.apk s3://mimo-apkdl/unrelease/prod/
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/mimo_\$VersionName.ipa s3://mimo-apkdl/unrelease/prod/
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/mimo_\$VersionName.aab s3://mimo-apkdl/unrelease/prod/
+
 """
             }
         }
@@ -298,9 +302,9 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 版本编号: ${env.versioncode}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
-- apk地址: http://192.168.1.161:7050/Share/TestAPP/prod_app/mimo_${env.tag}.apk\\\\\\n
-- aab地址: http://192.168.1.161:7050/Share/TestAPP/prod_app/mimo_${env.tag}.aab\\\\\\n
-- ipa地址: http://192.168.1.161:7050/Share/TestAPP/prod_app/mimo_${env.tag}.ipa\\\\\\n
+- apk地址: http://res.mimo.immo/unrelease/prod/mimo_${env.tag}.apk\\\\\\n
+- aab地址: http://res.mimo.immo/unrelease/prod/mimo_${env.tag}.aab\\\\\\n
+- ipa地址: http://res.mimo.immo/unrelease/prod/mimo_${env.tag}.ipa\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh

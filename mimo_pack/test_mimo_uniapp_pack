@@ -266,12 +266,17 @@ cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull
 if [ \$Channels == "Default" ]
 then
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
+
 elif [ \$Channels == "google" ]
 then
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 else
 /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
 fi
+
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.apk s3://mimo-apkdl/unrelease/test/
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.ipa s3://mimo-apkdl/unrelease/test/
+/usr/local/bin/aws s3 --profile mimosite cp \$FTPAddr/\$Branch\$VersionName.aab s3://mimo-apkdl/unrelease/test/
 
 
 """
@@ -300,9 +305,9 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 版本编号: ${env.versioncode}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
-- apk地址: http://192.168.1.161:7050/Share/TestAPP/test_app/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.apk\\\\\\n
-- aab地址: http://192.168.1.161:7050/Share/TestAPP/test_app/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.aab\\\\\\n
-- ipa地址: http://192.168.1.161:7050/Share/TestAPP/test_app/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.ipa\\\\\\n
+- apk地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.apk\\\\\\n
+- aab地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.aab\\\\\\n
+- ipa地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.ipa\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
