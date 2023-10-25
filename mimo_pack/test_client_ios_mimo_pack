@@ -53,5 +53,10 @@ pipeline {
                 '''
             }
         }
+        stage("安装包归档"){
+            steps{
+                archiveArtifacts artifacts:'~/Desktop/**/*.ipa',fingerprint: true
+            }
+        }
     }
 }
