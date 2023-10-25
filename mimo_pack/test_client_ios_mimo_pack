@@ -45,16 +45,10 @@ pipeline {
     }
     
     stages {
-        stage('检出最新代码.') {
-            steps{
-                script {
-                    tools.GitCheckOut(branch, url)
-                }
-            }
-        }
         stage('command') {
             steps{
                 sh '''
+                    cd ~/ios_test/
                     ./CI.sh $Version $BUILD_NUMBER
                 '''
             }
