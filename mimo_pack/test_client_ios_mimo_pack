@@ -47,15 +47,16 @@ pipeline {
     stages {
         stage('command') {
             steps{
-                sh '''
-                    cd ~/ios_test/mimo-app-ios/
-                    ./CI.sh $Version $BUILD_NUMBER
-                '''
+                // sh '''
+                //     cd ~/ios_test/mimo-app-ios/
+                //     ./CI.sh $Version $BUILD_NUMBER
+                // '''
+                echo "skip"
             }
         }
         stage("安装包归档"){
             steps{
-                archiveArtifacts artifacts:'~/Desktop/**/*.ipa',fingerprint: true
+                archiveArtifacts artifacts:'/Users/edy/Desktop/MIMO-202310251452/MIMO.ipa',fingerprint: true
             }
         }
     }
