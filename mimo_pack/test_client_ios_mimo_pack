@@ -50,7 +50,8 @@ pipeline {
         stage('command') {
             steps{
                 sh '''
-xcodebuild archive -workspace MIMO.xcworkspace -scheme MIMO -configuration Debug -archivePath ./ CODE_SIGN_IDENTITY="iPhone Developer: HENG MA (9AX47U4TZT)" PROVISIONING_PROFILE="367d16f6-c1c1-4fec-b475-d7a521299b8d"
+                    cd ~/ios_test/
+                    ./CI.sh 2.0.0 7
                 '''
             }
         }
