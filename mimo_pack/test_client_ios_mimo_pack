@@ -29,7 +29,7 @@ pipeline {
 
         string(
             name: "Version",
-            defaultValue: '1.0.0',
+            defaultValue: '2.0.0',
             description: 'app版本号'
         )
     }
