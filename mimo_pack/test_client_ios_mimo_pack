@@ -27,6 +27,18 @@ pipeline {
             description: '代码仓库地址'
         )
 
+        string(
+            name: "Version"
+            defaultValue: '1.0.0',
+            description: 'app版本号'
+        )
+
+        string(
+            name: "BuildNO"
+            defaultValue: '1',
+            description: 'build号'
+        )        
+
     }
 
     environment {
@@ -50,8 +62,7 @@ pipeline {
         stage('command') {
             steps{
                 sh '''
-                    cd ~/ios_test/
-                    ./CI.sh 2.0.0 7
+                    ./CI.sh $Version $BuildNO
                 '''
             }
         }
