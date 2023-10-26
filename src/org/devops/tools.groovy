@@ -115,7 +115,7 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d $'{\"api\":\"m_1691395720\",\"data\":\"\\\\n
+curl -H "Content-Type: application/json" -H "type: info" -X POST -d \$'{\"api\":\"m_1691395720\",\"data\":\"\\\\n
 ### ${text} ###\\\\n
 - 申请人: ${env.BUILD_USER}\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\n
