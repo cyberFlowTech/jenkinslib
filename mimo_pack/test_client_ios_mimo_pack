@@ -47,12 +47,18 @@ pipeline {
     stages {
         stage('command') {
             steps{
-                sh '''
-                    cd ~/ios_test/mimo-app-ios/
-                    ./CI.sh $Version $BUILD_NUMBER
-                '''
+                // sh '''
+                //     cd ~/ios_test/mimo-app-ios/
+                //     ./CI.sh $Version $BUILD_NUMBER
+                // '''
+                echo "skip"
             }
         }
         
+    }
+    post{
+        success {
+            archiveArtifacts artifacts: '**/*.ipa', fingerprint: true
+        }
     }
 }
