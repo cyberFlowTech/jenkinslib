@@ -115,17 +115,17 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d $'{\"api\":\"m_1691395720\",\"data\":\"\\n
-### ${text} ###\\n
-- 申请人: ${env.BUILD_USER}\\n
-- 构建名称: ${env.JOB_NAME}\\n
-- 构建分支: ${env.tag}\\n
-- 构建差异: ${env.BUILD_URL}last-changes/\\n
-- 构建日志: ${env.BUILD_URL}console\\n
-- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\n
-- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\n
-- 发版备注:${env.comment}\\n
-- 发版结果:${result}\\n
+curl -H "Content-Type: application/json" -H "type: info" -X POST -d $'{\"api\":\"m_1691395720\",\"data\":\"\\\\n
+### ${text} ###\\\\n
+- 申请人: ${env.BUILD_USER}\\\\n
+- 构建名称: ${env.JOB_NAME}\\\\n
+- 构建分支: ${env.tag}\\\\n
+- 构建差异: ${env.BUILD_URL}last-changes/\\\\n
+- 构建日志: ${env.BUILD_URL}console\\\\n
+- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\\\n
+- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\\n
+- 发版备注:${env.comment}\\\\n
+- 发版结果:${result}\\\\n
 \"}' "https://web3.mimo.immo/notify/notify"
     """
 
