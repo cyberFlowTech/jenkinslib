@@ -47,11 +47,10 @@ pipeline {
     stages {
         stage('command') {
             steps{
-                // sh '''
-                //     cd ~/ios_test/mimo-app-ios/
-                //     ./CI.sh $Version $BUILD_NUMBER
-                // '''
-                echo "skip"
+                sh '''
+                    cd ~/ios_test/mimo-app-ios/
+                    ./CI.sh $Version $BUILD_NUMBER
+                '''
             }
         }
         
