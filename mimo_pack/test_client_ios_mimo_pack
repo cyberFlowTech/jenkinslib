@@ -17,7 +17,7 @@ pipeline {
 
         string(
             name: 'Branch', 
-            defaultValue: 'master', 
+            defaultValue: 'main', 
             description: '默认分支或者Tag'
         )
 
