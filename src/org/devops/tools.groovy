@@ -115,7 +115,7 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\\"api\\":\\"m_1691395720\\",\\"data\\":[\\"
+curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\\"api\\":\\"m_1691395720\\",\\"data\\":\\"
 ### ${text} ###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
@@ -126,7 +126,7 @@ curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\\"api\\":
 - 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\\\\n
 - 发版备注:${env.comment}\\\\\\n
 - 发版结果:${result}\\\\\\n
-\\"]}' "https://web3.mimo.immo/notify/notify"
+\\"}' "https://web3.mimo.immo/notify/notify"
     """
 
 
