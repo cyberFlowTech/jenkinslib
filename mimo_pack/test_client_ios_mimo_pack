@@ -47,18 +47,18 @@ pipeline {
     stages {
         stage('command') {
             steps{
-                // sh '''
-                //     cd ~/ios_test/mimo-app-ios/
-                //     ./CI.sh $Version $BUILD_NUMBER
-                // '''
-                echo "skip"
+                sh '''
+                    cd ~/ios_test/mimo-app-ios/
+                    ./CI.sh $Version $BUILD_NUMBER
+                '''
             }
         }
         
     }
     post{
         success {
-            archiveArtifacts artifacts: '**/*.ipa', fingerprint: true
+            archiveArtifacts artifacts: '**/*.ipa'
+            sh "rm -rf /Users/apple/Documents/git/jenkins/workspace/test_client_ios_mimo_pack/ios_pack/*"
         }
     }
 }
