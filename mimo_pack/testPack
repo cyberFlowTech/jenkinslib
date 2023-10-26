@@ -185,7 +185,7 @@ pipeline {
         stage('检出最新代码.') {
             steps{
                 script {
-                    tools.GitCheckOut(branch, url)
+                    checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'cyberflowtyler', url: "${url}"]])
                 }
             }
         }
