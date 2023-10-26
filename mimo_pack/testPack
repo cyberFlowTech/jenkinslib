@@ -176,7 +176,7 @@ pipeline {
         // 传参转为环境变量
         branch = "$params.Branch"
         url = "$params.RepoUrl"
-        tag = "$params.VersionName"
+
 
 
     }
