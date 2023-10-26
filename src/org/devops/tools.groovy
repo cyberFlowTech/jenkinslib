@@ -115,17 +115,17 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\"api\":\"m_1691395720\",\"data\":\"%0D%0A
-### ${text} ###%0D%0A
-- 申请人: ${env.BUILD_USER}%0D%0A
-- 构建名称: ${env.JOB_NAME}%0D%0A
-- 构建分支: ${env.tag}%0D%0A
-- 构建差异: ${env.BUILD_URL}last-changes/%0D%0A
-- 构建日志: ${env.BUILD_URL}console%0D%0A
-- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}%0D%0A
-- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels%0D%0A
-- 发版备注:${env.comment}%0D%0A
-- 发版结果:${result}%0D%0A
+curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\"api\":\"m_1691395720\",\"data\":\"\%0D\%0A
+### ${text} ###\%0D\%0A
+- 申请人: ${env.BUILD_USER}\%0D\%0A
+- 构建名称: ${env.JOB_NAME}\%0D\%0A
+- 构建分支: ${env.tag}\%0D\%0A
+- 构建差异: ${env.BUILD_URL}last-changes/\%0D\%0A
+- 构建日志: ${env.BUILD_URL}console\%0D\%0A
+- 镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\%0D\%0A
+- 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\%0D\%0A
+- 发版备注:${env.comment}\%0D\%0A
+- 发版结果:${result}\%0D\%0A
 \"}' "https://web3.mimo.immo/notify/notify"
     """
 
