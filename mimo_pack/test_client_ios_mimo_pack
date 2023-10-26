@@ -58,7 +58,7 @@ pipeline {
     post{
         success {
             archiveArtifacts artifacts: '**/*.ipa'
-            sh "rm -rf /Users/apple/Documents/git/jenkins/workspace/test_client_ios_mimo_pack/ios_pack/*"
+            sh "rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*"
         }
     }
 }
