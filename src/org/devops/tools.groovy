@@ -142,8 +142,8 @@ def NotifyV2(envi,result) {
         text="开发环境发布完毕。"
     }
 
-    buildUser=$env.BUILD_USER
-    buildName=$env.JOB_NAME
+    buildUser="${env.BUILD_USER}"
+    buildName="${env.JOB_NAME}"
 
 
     sh """
