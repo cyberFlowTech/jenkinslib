@@ -47,40 +47,42 @@ pipeline {
     stages {
         stage('command') {
             steps{
-                // sh '''
-                // rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
-                // cd ~/ios_test/mimo-app-ios/
-                // ./CI.sh $Version $BUILD_NUMBER
-                // '''
-                echo "skip"
+                sh '''
+                rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
+                cd ~/ios_test/mimo-app-ios/
+                ./CI.sh $Version $BUILD_NUMBER
+                '''
             }
         }
         
     }
     post{
         always {
-            sh """
-            pack_name=\$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
-            echo \${pack_name}
+            wrap([$class: 'BuildUser']) {
+sh """
+pack_name=\$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
-### 原生 IOS 测试包 ###\\\\\\n
+### 原生 IOS ${env.Package}包 ###\\\\\\n
 - 执行人: ${env.BUILD_USER}\\\\\\n
 - 执行结果: "${currentBuild.currentResult}"\\\\\\n
 - 分支: ${env.branch}\\\\\\n
-- 版本编号: ${env.Version}\\\\\\n
+- 版本号: ${env.Version}\\\\\\n
+- 包类型：${env.Package}包\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
 - ipa地址：http://192.168.0.240:7050/Share/IOS_PACK/Debug/\${pack_name}
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
-" > ./send.sh 
+" > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
+            }
+            
         }
         success {
-            // archiveArtifacts artifacts: '**/*.ipa'
-            echo "skip"
+            archiveArtifacts artifacts: '**/*.ipa'
+        
         }
     }
 }
