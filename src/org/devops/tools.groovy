@@ -157,8 +157,8 @@ MESSAGE='{\\"api\\":\\"m_1691395720\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发版备注:${env.comment}\\\\\\n
 - 发版结果:${result}\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d \\\$MESSAGE "https://web3.mimo.immo/notify/notify"
-" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
+curl -H \\"Content-Type: application/json\\" -H \\"type: info\\" -X POST -d \\\$MESSAGE \\"https://web3.mimo.immo/notify/notify\\"
+" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && cat ./send.sh && /bin/bash ./send.sh
     """
 
 
