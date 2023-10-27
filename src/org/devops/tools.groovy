@@ -143,7 +143,7 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-curl -X POST https://web3.mimo.immo/notify/notify -H "Content-Type:application/json" -H "type:info" --data {"api":"m_1691395720","data":"${text}"}
+curl -X POST https://web3.mimo.immo/notify/notify -H "Content-Type:application/json" -H "type:info" --data '{"api":"m_1691395720","data":"${text}"}'
     """
 
 
