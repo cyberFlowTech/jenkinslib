@@ -97,7 +97,7 @@ MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 发版备注:${env.comment}\\\\\\n
 - 发版结果:${result}\\\\\\n
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-echo -n \\\$MESSAGE | nc -u -w1 notify-udp-service.infras-prod.svc.cluster.local 8081
+echo -n \\\$MESSAGE | nc -u -w1 notify-udp-service.mimo-prod.svc.cluster.local 8081
 " > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
 
