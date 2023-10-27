@@ -60,8 +60,8 @@ pipeline {
     post{
         always {
             sh """
-            pack_name=$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
-            echo ${pack_name}
+            pack_name=\$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
+            echo \${pack_name}
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
@@ -72,7 +72,7 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 - 版本编号: ${env.Version}\\\\\\n
 - 差异: ${env.BUILD_URL}last-changes/\\\\\\n
 - 日志: ${env.BUILD_URL}console\\\\\\n
-- ipa地址：http://192.168.0.240:7050/Share/IOS_PACK/Debug/${packName}
+- ipa地址：http://192.168.0.240:7050/Share/IOS_PACK/Debug/\${packName}
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
 " > ./send.sh 
