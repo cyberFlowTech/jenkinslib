@@ -145,7 +145,7 @@ def NotifyV2(envi,result) {
     sh """
 echo "
 #!/bin/bash
-MESSAGE='{\\"api\\":\\"${api}\\",\\"time\\":1691397277,\\"data\\":[\\"
+MESSAGE='{\\"api\\":\\"m_1691395720\\",\\"time\\":1691397277,\\"data\\":[\\"
 ### ${text} ###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
