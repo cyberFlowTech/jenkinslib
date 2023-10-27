@@ -143,7 +143,9 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-MESSAGE="
+echo "
+#!/bin/bash
+MESSAGE='{\\"api\\":\\"m_1691395720\\",\\"time\\":1691397277,\\"data\\":[\\"
 ### ${text} ###\\\\\\n
 - 申请人: ${env.BUILD_USER}\\\\\\n
 - 构建名称: ${env.JOB_NAME}\\\\\\n
@@ -154,8 +156,9 @@ MESSAGE="
 - 发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\\\\n
 - 发版备注:${env.comment}\\\\\\n
 - 发版结果:${result}\\\\\\n
-"
-curl -H "Content-Type: application/json" -H "type: info" -X POST -d '{\"api\":\"m_1691395720\",\"data\": \$MESSAGE}' "https://web3.mimo.immo/notify/notify"
+\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
+curl -H "Content-Type: application/json" -H "type: info" -X POST -d \\\$MESSAGE "https://web3.mimo.immo/notify/notify"
+" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
     """
 
 
