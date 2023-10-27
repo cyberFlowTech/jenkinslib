@@ -143,7 +143,7 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n申请人:${env.BUILD_USER}\\n构建名称:${env.JOB_NAME}"}\' https://web3.mimo.immo/notify/notify'
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n申请人:${env.BUILD_USER}\\n构建名称:${env.JOB_NAME}"}\' https://web3.mimo.immo/notify/notify
     """
 
 }
