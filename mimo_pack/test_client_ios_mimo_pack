@@ -60,7 +60,7 @@ pipeline {
     post{
         always {
             sh """
-            pack_name=`ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/`
+            pack_name=$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
             echo ${pack_name}
 echo "
 #!/bin/bash
