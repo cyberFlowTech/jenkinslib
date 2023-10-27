@@ -53,8 +53,8 @@ pipeline {
 
         string(
             name: 'TargetSDKVersion', 
-            defaultValue: '33', 
-            description: 'sdk版本号'
+            defaultValue: '28', 
+            description: 'sdk版本号。aab包值为33，apk包值为28'
         )
 
         string(
@@ -128,7 +128,7 @@ pipeline {
 
         string(
            name: "IosCertPassword",
-           defaultValue: '123456',
+           defaultValue: '123123',
            description: 'IOS证书密码"'
         )
 
