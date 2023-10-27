@@ -143,22 +143,7 @@ def NotifyV2(envi,result) {
     }
 
     sh """
-echo "
-#!/bin/bash
-MESSAGE='{\\"api\\":\\"m_1691395720\\",\\"time\\":1691397277,\\"data\\":[\\"
-### ${text} ###\\\\\\n
-申请人: ${env.BUILD_USER}\\\\\\n
-构建名称: ${env.JOB_NAME}\\\\\\n
-构建分支: ${env.tag}\\\\\\n
-构建差异: ${env.BUILD_URL}last-changes/\\\\\\n
-构建日志: ${env.BUILD_URL}console\\\\\\n
-镜像名称: 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\\\\\n
-发布地址: https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\\\\\n
-发版备注:${env.comment}\\\\\\n
-发版结果:${result}\\\\\\n
-\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-curl -X POST https://web3.mimo.immo/notify/notify -H \\"Content-Type:application/json\\" -H \\"type:info\\" --data \\\$MESSAGE
-" > ./send.sh && sed -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && cat ./send.sh && /bin/bash ./send.sh
+curl -X POST https://web3.mimo.immo/notify/notify -H "Content-Type:application/json" -H "type:info" --data {"api":"m_1691395720","data":"${text}"}
     """
 
 
