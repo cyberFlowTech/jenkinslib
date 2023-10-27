@@ -59,9 +59,9 @@ pipeline {
     }
     post{
         always {
-            sh """
-            pack_name=\$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
-            echo \${pack_name}
+            wrap([$class: 'BuildUser']) {
+sh """
+pack_name=\$(ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/)
 echo "
 #!/bin/bash
 MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
@@ -75,12 +75,14 @@ MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
 - ipa地址：http://192.168.0.240:7050/Share/IOS_PACK/Debug/\${pack_name}
 \\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
 echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
-" > ./send.sh 
+" > ./send.sh && /bin/bash ./send.sh
     """
+            }
+            
         }
         success {
-            // archiveArtifacts artifacts: '**/*.ipa'
-            echo "skip"
+            archiveArtifacts artifacts: '**/*.ipa'
+        
         }
     }
 }
