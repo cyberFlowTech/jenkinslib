@@ -147,7 +147,7 @@ def NotifyV2(envi,result) {
 
 
     sh """
-curl -X POST -H \\"Content-Type:\\\\sapplication/json\\" -H \\"type:\\\\sinfo\\" -d \\'{\\"api\\":\\"m_1691395720\\",\\"data\\":\\"abc\\"}\\' https://web3.mimo.immo/notify/notify
+curl -X POST -H \\"Content-Type:\\\\ application/json\\" -H \\"type:\\\\ info\\" -d \\'{\\"api\\":\\"m_1691395720\\",\\"data\\":\\"abc\\"}\\' https://web3.mimo.immo/notify/notify
     """
 
 
