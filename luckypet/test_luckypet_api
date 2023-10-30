@@ -103,29 +103,29 @@ pipeline {
             }
         }
 
-        stage('输出与最近一次构建的差异.'){
-            steps{
-                script{
-                    tools.LastChanges()
-                }
-            }
-        }
+        // stage('输出与最近一次构建的差异.'){
+        //     steps{
+        //         script{
+        //             tools.LastChanges()
+        //         }
+        //     }
+        // }
 
-        stage("编译/制作镜像.") {
-           steps{
-                script{
-                    luckypet.BuildAPIImageAndPush(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
-                }
-            }
-        }
+        // stage("编译/制作镜像.") {
+        //    steps{
+        //         script{
+        //             luckypet.BuildAPIImageAndPush(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, tag)
+        //         }
+        //     }
+        // }
 
-        stage('发布.'){
-            steps{
-                script{
-                    luckypet.Publish(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, projectname, tag, "${env.JOB_NAME}")
-                }
-            }
-        }
+        // stage('发布.'){
+        //     steps{
+        //         script{
+        //             luckypet.Publish(option, envi, "024905375334.dkr.ecr.ap-southeast-1.amazonaws.com", servicename, projectname, tag, "${env.JOB_NAME}")
+        //         }
+        //     }
+        // }
     }
     
     post {

@@ -2,6 +2,7 @@ package org.devops
 
 // 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras
 
+// 前端
 def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
     if (env == "dev") {
         sh """
@@ -24,6 +25,7 @@ def BuildImageAndPush(option, env, imageAddr, serviceName, tag){
     """
 }
 
+// api服务
 def BuildAPIImageAndPush(option, env, imageAddr, serviceName, tag){
 
     sh """
@@ -36,6 +38,7 @@ def BuildAPIImageAndPush(option, env, imageAddr, serviceName, tag){
     """
 }
 
+// 定时任务服务
 def BuildTaskImageAndPush(option, env, imageAddr, serviceName, tag){
 
     sh """

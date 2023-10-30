@@ -1,6 +1,6 @@
 package org.devops
 
-// 通用
+// 通用前后端发布
 def NotifyV2(envi,result) {    
     if ( envi == 'prod' ){
         text="生产环境镜像构建并推送完毕，请点击rancher链接手动替换镜像名称进行发版。"

@@ -22,6 +22,7 @@ def BuildPyMimoImageAndPush(option, env, imageAddr, serviceName, tag){
     }
 }
 
+// py-mimo发布
 def PublishPyMimo(option, env, imageAddr, servicename, projectname, tag, servicepath, hostname, jobname, arn) {
     command = """
         cd /home/RD.Center/eks/genDeploy && git pull
