@@ -34,7 +34,7 @@ def UniappPackNotifyV2(envi,result) {
     }
 
     jenkinsAddr = "${env.BUILD_URL}"
-    jenkinsAddrReplaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
+    jenkinsAddrReplaced = jenkinsAddr.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
     branch = "${env.branch}"
     branchReplaced = branch.replace("/", "_")
     sh """
@@ -49,7 +49,7 @@ def OriginIosAppPackNotifyV2(result) {
     text="原生 IOS ${env.Package}包"
 
     jenkinsAddr = "${env.BUILD_URL}"
-    jenkinsAddrReplaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
+    jenkinsAddrReplaced = jenkinsAddr.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
     branch = "${env.branch}"
     def packageName = sh(script: 'ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Release/ios_pack/', returnStdout: true).trim()
     sh """
