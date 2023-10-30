@@ -142,7 +142,7 @@ def NotifyV2(envi,result) {
         text="开发环境发布完毕。"
     }
 
-    str = ${env.BUILD_URL}
+    str = "${env.BUILD_URL}"
     replaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
 
     sh """
