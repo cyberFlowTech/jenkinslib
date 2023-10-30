@@ -52,9 +52,10 @@ def OriginIosAppPackNotifyV2(result) {
     replaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
     branch = "${env.branch}"
     branchReplaced = branch.replace("/", "_")
+    def process ="ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Release/ios_pack/".execute()
     sh """
     packageName=`ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Release/ios_pack/`
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.Package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.Version}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\nipa地址: http://192.168.0.240:7050/Share/IOS_PACK/Release/\$packageName"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.Package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.Version}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\nipa地址: http://192.168.0.240:7050/Share/IOS_PACK/Release/${process.text}"}\' https://web3.mimo.immo/notify/notify
     """
 }
 
