@@ -33,8 +33,10 @@ def UniappPackNotifyV2(envi,result) {
 
     str = "${env.BUILD_URL}"
     replaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
+    branch = "${env.branch}"
+    branchReplaced = branch.replace("/", "_")
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n镜像名称:024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
     """
 }
 
