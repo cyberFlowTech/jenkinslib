@@ -235,7 +235,7 @@ pipeline {
             wrap([$class: 'BuildUser']) {
                 script{
                     result = "${currentBuild.currentResult}"
-                    tools.Notify(envi,result)
+                    tools.UniappPackNotifyV2(envi,result)
                 }
             }
         }

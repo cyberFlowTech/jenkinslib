@@ -109,27 +109,6 @@ pipeline {
                 }
             }
         }
-        
-        stage('Generate the kubernetes yaml config.'){
-            steps{
-                script{
-                    if ( option == 'Expand' ){
-                        echo "expand does not need this."
-                    }else{
-                        sshPublisher(publishers: [sshPublisherDesc(configName: 'AwsEksJumpServer', transfers: [sshTransfer(cleanRemote: false, excludes: '', 
-                        execCommand: '''
-                        # generate the kubernetes yaml config
-                        /home/RD.Center/eks/genDeploy/genDeploy aws-ecr-key 024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/infras test test $Replicas $Hostname mimo $Servicename $Directory $Servicepath arn:aws:acm:ap-southeast-1:024905375334:certificate/af277c1b-a5b9-4c1c-93c6-ebc1ea340390
-
-                        ''', 
-                        execTimeout: 12000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '/jenkins/test_mimo_web_eks_deploy', remoteDirectorySDF: false, removePrefix: '', 
-                        sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
-                    }
-
-                }
-            }
-
-        }
 
  
         stage('Deploy.'){

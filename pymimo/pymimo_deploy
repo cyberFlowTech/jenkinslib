@@ -151,7 +151,7 @@ pipeline {
                     // emailext body: '$DEFAULT_CONTENT', mimeType: 'text/html', subject: '$DEFAULT_SUBJECT', to: "${env.BUILD_USER}"
                     //telegram通知
                     result = "${currentBuild.currentResult}"
-                    // tools.Notify(envi,result)
+                    tools.Notify(envi,result)
                 }
             }
         }
