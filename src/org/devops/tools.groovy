@@ -36,7 +36,7 @@ def UniappPackNotifyV2(envi,result) {
     branch = "${env.branch}"
     branchReplaced = branch.replace("/", "_")
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
     """
 }
 
