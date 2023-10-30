@@ -260,39 +260,39 @@ def PostmanAPItest(){
 
 def Notify(envi,result) {
 
-    Applier_name = "${env.BUILD_USER}"
+    // Applier_name = "${env.BUILD_USER}"
 
-    // telegram
+    // // telegram
 
-    if ( envi == "dev" ){
-        approval = "NO"
-    } else if ( Applier_name == "linyuecheng"){
-        approval = "NO"
-    } else if ( Applier_name == "zhangkai"){
-        approval = "NO"
-    } else if ( Applier_name == "xiangbo"){
-        approval = "NO"
-    } else if ( Applier_name == "longhaijian"){
-        approval = "NO"
-    }else{
-        approval = "YES"
-    }
+    // if ( envi == "dev" ){
+    //     approval = "NO"
+    // } else if ( Applier_name == "linyuecheng"){
+    //     approval = "NO"
+    // } else if ( Applier_name == "zhangkai"){
+    //     approval = "NO"
+    // } else if ( Applier_name == "xiangbo"){
+    //     approval = "NO"
+    // } else if ( Applier_name == "longhaijian"){
+    //     approval = "NO"
+    // }else{
+    //     approval = "YES"
+    // }
 
-    if ( approval == "YES"){
-        if ( envi == "test" ){
-            adminUser = "zhangkai"
-        }else{
-            adminUser = "longhaijian"
-        }
-    }else{
-        adminUser = "nobody"
-    }
+    // if ( approval == "YES"){
+    //     if ( envi == "test" ){
+    //         adminUser = "zhangkai"
+    //     }else{
+    //         adminUser = "longhaijian"
+    //     }
+    // }else{
+    //     adminUser = "nobody"
+    // }
 
-    approvalDD = "sample"
+    // approvalDD = "sample"
 
-    // 推送消息到telegram
-    udpNotifyAPI = "m_1691395720"
-    ReqPublishNotifyByUdpNotifyServer(adminUser,approvalDD,envi,udpNotifyAPI,result)
+    // // 推送消息到telegram
+    // udpNotifyAPI = "m_1691395720"
+    NotifyV2(envi,result)
 
 
 }
