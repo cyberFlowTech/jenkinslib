@@ -177,7 +177,7 @@ pipeline {
         branch = "$params.Branch"
         url = "$params.RepoUrl"
         envi = "testetst"
-        tag = "$params.Branch"
+        tag = "$params.VersionName"
 
 
 
