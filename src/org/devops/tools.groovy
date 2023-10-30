@@ -1,5 +1,6 @@
 package org.devops
 
+// 通用
 def NotifyV2(envi,result) {    
     if ( envi == 'prod' ){
         text="生产环境镜像构建并推送完毕，请点击rancher链接手动替换镜像名称进行发版。"
@@ -15,6 +16,7 @@ def NotifyV2(envi,result) {
     """
 }
 
+// uniapp打包通知
 def UniappPackNotifyV2(envi,result) {    
 
     if ( env.isCustom == 'true' ){
@@ -36,7 +38,23 @@ def UniappPackNotifyV2(envi,result) {
     branch = "${env.branch}"
     branchReplaced = branch.replace("/", "_")
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n版本名称:${env.tag}\\n版本编号:${env.versioncode}\\n构建分支:${env.branch}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\n执行结果:${result}\\napk地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.apk\\naab地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.aab\\nipa地址: http://res.mimo.immo/unrelease/test/${branchReplaced}${packageTag}.ipa"}\' https://web3.mimo.immo/notify/notify
+    """
+}
+
+// 原生IOS打包通知
+def OriginIosAppPackNotifyV2(result) {    
+
+
+    text="原生 IOS ${env.Package}包"
+
+    str = "${env.BUILD_URL}"
+    replaced = str.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
+    branch = "${env.branch}"
+    branchReplaced = branch.replace("/", "_")
+    sh """
+    packageName=`ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Release/ios_pack/`
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.Package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.Version}\\n差异:${replaced}last-changes/\\n日志:${replaced}console\\nipa地址: http://192.168.0.240:7050/Share/IOS_PACK/Release/\$packageName"}\' https://web3.mimo.immo/notify/notify
     """
 }
 

@@ -176,7 +176,7 @@ pipeline {
         // 传参转为环境变量
         branch = "$params.Branch"
         url = "$params.RepoUrl"
-        envi = "testetst"
+        envi = "test"
         tag = "$params.VersionName"
 
 
@@ -184,47 +184,10 @@ pipeline {
     }
 
     stages{
-//         stage('检出最新代码.') {
-//             steps{
-//                 script {
-//                     checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'cyberflowtyler', url: "${url}"]])
-//                 }
-//             }
-//         }
-//         stage('打开HbuilderX。'){
-//             steps{
-                
-// //                 sh """
-// // echo "Start the hbuilderx"
-// // #export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
-// // nohup /Applications/HBuilderX.app/Contents/MacOS/HBuilderX >/dev/null 2>&1 &
-// // sleep 3
-// // """
-// //                 sh """
-// // Branch=`echo \$Branch | sed 's/\\//_/g'`
-
-// // cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull
-// // if [ \$Channels == "Default" ]
-// // then
-// // /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.apk \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-// // elif [ \$Channels == "google" ]
-// // then
-// // /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName.aab \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-// // else
-// // /Users/apple/go/bin/go run getThePackage.go bothDownload test_mimo_uniapp_pack \$Branch\$VersionName \$Branch\$VersionName.ipa \$FTPAddr \$IsCustom \$Branch
-// // fi
-
-
-// // """
-//                 sh """
-// cd /Users/apple/Documents/git/jenkins/workspace/scripts && git pull && /Users/apple/go/bin/go run getThePackage.go prepare \$Env \$AndroidPackageName \$IosBundleID \$AppID \$VersionName \$VersionCode /Users/apple/Documents/git/jenkins/workspace/testPack \$TargetSDKVersion
-// """
-//             }
-//         }
-        stage('发送通知.') {
+        stage('检出代码.') {
             steps{
                 script {
-                    checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'cyberflowtyler', url: "${url}"]])
+                    checkout scmGit(branches: [[name: "${branch}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'cyberflowtyler', url: "${url}"]])
                 }
             }
         }

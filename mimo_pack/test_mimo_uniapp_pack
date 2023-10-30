@@ -289,36 +289,8 @@ fi
         always {
             wrap([$class: 'BuildUser']) {
                 script{
-    if ( env.isCustom == 'true' ){
-        packageTag="Debug"
-    }else{
-        packageTag=env.tag
-    }
-                        sh """
-echo "
-#!/bin/bash
-MESSAGE='{\\"api\\":\\"m_1691395722\\",\\"time\\":1691397277,\\"data\\":[\\"
-### uniapp cloudpack 测试包 ###\\\\\\n
-- 执行人: ${env.BUILD_USER}\\\\\\n
-- 执行结果: "${currentBuild.currentResult}"\\\\\\n
-- 分支: ${env.branch}\\\\\\n
-- 版本名称: ${env.tag}\\\\\\n
-- 版本编号: ${env.versioncode}\\\\\\n
-- 差异: ${env.BUILD_URL}last-changes/\\\\\\n
-- 日志: ${env.BUILD_URL}console\\\\\\n
-- apk地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.apk\\\\\\n
-- aab地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.aab\\\\\\n
-- ipa地址: http://res.mimo.immo/unrelease/test/`echo $Branch | sed 's/\\\\//_/g'`${packageTag}.ipa\\\\\\n
-\\"],\\"sign\\":\\"b68f5dcd4d2a3d778d282567208e8690\\"}'
-echo -n \\\$MESSAGE | nc -u -w1 13.212.162.101 31164
-" > ./send.sh && /usr/local/bin/gsed -E -i "s/http:\\/\\/jenkins:8080/https:\\/\\/jenkins.mimo.immo/g" ./send.sh && /bin/bash ./send.sh
-    """
-                        sh """
-echo "stop the hbuilderx"
-name=`ps -ef|grep /Applications/HBuilderX.app/Contents/MacOS/HBuilderX|grep -v "nohup"|grep -v "grep"|awk '{printf(\$2)}'`
-kill -9 \$name
-    """
-    
+                    result = "${currentBuild.currentResult}"
+                    tools.UniappPackNotifyV2("test",result)
                 }
             }
         }
