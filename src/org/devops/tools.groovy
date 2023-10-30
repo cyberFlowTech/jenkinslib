@@ -145,8 +145,7 @@ def NotifyV2(envi,result) {
 
     sh """
     build_url=${env.BUILD_URL}
-    build=`echo \${build_url:9}`
-    echo $build
+    echo \${build_url:9}
     curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395720","data":"${text}\\n申请人:${env.BUILD_USER}\\n构建名称:${env.JOB_NAME}\\n构建分支:${env.tag}\\n构建差异:`echo ${env.BUILD_URL}`last-changes/\\n构建日志:`echo ${env.BUILD_URL}`console\\n镜像名称:024905375334.dkr.ecr.ap-southeast-1.amazonaws.com/${env.servicename}:${env.tag}\\n发布地址:https://rancher.mimo.immo/dashboard/c/local/explorer/apps.deployment/${env.projectname}-${envi}/${env.servicename}-deployment?mode=edit#labels\\n发版备注:${env.comment}\\n发版结果:${result}"}\' https://web3.mimo.immo/notify/notify
     """
 
