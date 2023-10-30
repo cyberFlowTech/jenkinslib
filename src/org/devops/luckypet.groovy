@@ -53,8 +53,7 @@ def BuildTaskImageAndPush(option, env, imageAddr, serviceName, tag){
     """
 }
 
-
-
+// 发布
 def Publish(option, env, imageAddr, servicename, projectname, tag, jobname) {
     command = """
         cd /home/RD.Center/eks/genDeploy && git pull
