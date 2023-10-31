@@ -86,9 +86,9 @@ def OriginIosAppPackNotifyV2(result) {
     jenkinsAddr = "${env.BUILD_URL}"
     jenkinsAddrReplaced = jenkinsAddr.replace("http://jenkins:8080", "https://jenkins.mimo.immo")
     branch = "${env.branch}"
-    def packageName = sh(script: 'ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Release/ios_pack/', returnStdout: true).trim()
+    def packageName = sh(script: 'ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_${env.Package}/ios_pack/', returnStdout: true).trim()
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.Package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.Version}\\n差异:${jenkinsAddrReplaced}last-changes/\\n日志:${jenkinsAddrReplaced}console\\nipa地址: http://192.168.0.240:7050/Share/IOS_PACK/Release/${packageName}"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.Package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.Version}\\n差异:${jenkinsAddrReplaced}last-changes/\\n日志:${jenkinsAddrReplaced}console\\nipa地址: http://192.168.0.240:7050/Share/IOS_PACK/${env.Package}/${packageName}"}\' https://web3.mimo.immo/notify/notify
     """
 }
 
