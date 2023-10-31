@@ -14,7 +14,7 @@ def comment
 pipeline {
 
     agent {
-        label 'slave1'
+        label 'macos4'
     }
 
     options {
