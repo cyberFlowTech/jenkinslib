@@ -19,8 +19,7 @@ def GitCheckOut(tag, url){
     }else if ( env.option == 'Expand' ){
         echo "expand does not need this."
     }else{
-        // checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: '554844dc-46f5-4975-a50e-00dba9745e87', url: "${url}"]])
-        checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'cyberflowtyler', url: "${url}"]])
+        checkout scmGit(branches: [[name: "${tag}"]], extensions: [], userRemoteConfigs: [[credentialsId: 'df21ada6-9b96-4f3d-af09-c5f281615e18', url: "${url}"]])
     }
 
 }
