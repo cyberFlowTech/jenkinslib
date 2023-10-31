@@ -55,9 +55,9 @@ pipeline {
         stage('command') {
             steps{
                 sh '''
-                #rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
+                rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
                 cd ~/ios_test/mimo-app-ios/
-                #/bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
+                /bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
                 '''
             }
         }
