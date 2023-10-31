@@ -1,3 +1,5 @@
+#!/bin/bash -l
+
 @Library('jenkinslib') _  
 //调用方法库文件
 def tools = new org.devops.tools()
