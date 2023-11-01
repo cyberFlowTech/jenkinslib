@@ -57,7 +57,10 @@ pipeline {
                 sh '''
                 rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
                 cd ~/ios_test/mimo-app-ios/
-                /bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
+                rm -rf ./build/
+                yarn
+                pod install
+                # /bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
                 '''
             }
         }
