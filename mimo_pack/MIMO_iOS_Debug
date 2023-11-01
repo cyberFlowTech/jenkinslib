@@ -55,19 +55,9 @@ pipeline {
         stage('command') {
             steps{
                 sh '''
-
                 rm -rf /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_Debug/ios_pack/*
                 cd ~/ios_test/mimo-app-ios/
-                rm -rf ./build/
-                yarn
-
-                export LANG=en_US.UTF-8
-                export LANGUAGE=en_US.UTF-8
-                export LC_ALL=en_US.UTF-8
-                pod install
-
-                # /bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
-                
+                /bin/bash ./CI.sh $Version $BUILD_NUMBER Debug
                 '''
             }
         }
