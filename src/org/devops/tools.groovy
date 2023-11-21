@@ -87,7 +87,7 @@ def OriginIosAppPackNotifyV2(result) {
     branch = "${env.branch}"
     def packageName = sh(script: 'ls /Users/apple/Documents/git/jenkins/workspace/MIMO_iOS_\${Package}/ios_pack/', returnStdout: true).trim()
     sh """
-    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.version}\\n差异:${jenkinsAddrReplaced}last-changes/\\n日志:${jenkinsAddrReplaced}console\\nipa地址: https://jenkins.mimo.immo/view/mimo_app_ios/job/MIMO_iOS_Debug/${env.BUILD_ID}/artifact/ios_pack/${packageName}"}\' https://web3.mimo.immo/notify/notify
+    curl -X POST -H Content-Type:application/json -H type:info -d \'{"api":"m_1691395722","data":"${text}\\n包类型:${env.package}\\n构建名称:${env.JOB_NAME}\\n执行人:${env.BUILD_USER}\\n执行结果:${result}\\n分支:${env.branch}\\n版本号:${env.version}\\n差异:${jenkinsAddrReplaced}last-changes/\\n日志:${jenkinsAddrReplaced}console\\nipa地址: https://jenkins.mimo.immo/view/mimo_app_ios/job/MIMO_iOS_Debug/${env.BUILD_ID}/artifact/ios_pack/${packageName}"}\\njenkins通用账号:admin\\n密码:IsPqxOMCWZ4UyHKPX6WG01\' https://web3.mimo.immo/notify/notify
     """
 }
 
